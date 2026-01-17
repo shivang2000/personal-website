@@ -2,7 +2,13 @@
   "permissions": {
     "allow": [
       "Bash(grep:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Skill(frontend-design:frontend-design)",
+      "mcp__serena__list_dir",
+      "WebFetch(domain:docs.google.com)",
+      "mcp__plugin_serena_serena__list_dir",
+      "Bash(bun run check-types:*)"
     ]
   }
 }

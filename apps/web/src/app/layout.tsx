@@ -1,41 +1,68 @@
 import type { Metadata } from "next";
 
-import { Geist, Geist_Mono } from "next/font/google";
+import { Playfair_Display, DM_Sans, JetBrains_Mono } from "next/font/google";
 
 import "../index.css";
 import Header from "@/components/header";
 import Providers from "@/components/providers";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const playfair = Playfair_Display({
+	variable: "--font-serif",
+	subsets: ["latin"],
+	display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const dmSans = DM_Sans({
+	variable: "--font-sans",
+	subsets: ["latin"],
+	display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+	variable: "--font-mono",
+	subsets: ["latin"],
+	display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "personal-website",
-  description: "personal-website",
+	title: "Shivang Chheda | Full-Stack Engineer",
+	description:
+		"Frontend & Full-Stack Engineer specializing in React, TypeScript, Node.js, and Go. Building high-performance applications for US remote teams.",
+	keywords: [
+		"Full-Stack Engineer",
+		"React Developer",
+		"TypeScript",
+		"Node.js",
+		"Go",
+		"Remote Developer",
+		"Freelance Developer",
+	],
+	authors: [{ name: "Shivang Chheda" }],
+	openGraph: {
+		title: "Shivang Chheda | Full-Stack Engineer",
+		description:
+			"Frontend & Full-Stack Engineer specializing in React, TypeScript, Node.js, and Go.",
+		type: "website",
+	},
 };
 
 export default function RootLayout({
-  children,
+	children,
 }: Readonly<{
-  children: React.ReactNode;
+	children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <Providers>
-          <div className="grid grid-rows-[auto_1fr] h-svh">
-            <Header />
-            {children}
-          </div>
-        </Providers>
-      </body>
-    </html>
-  );
+	return (
+		<html lang="en" suppressHydrationWarning>
+			<body
+				className={`${playfair.variable} ${dmSans.variable} ${jetbrainsMono.variable} antialiased`}
+			>
+				<Providers>
+					<div className="flex min-h-svh flex-col">
+						<Header />
+						<main className="flex-1">{children}</main>
+					</div>
+				</Providers>
+			</body>
+		</html>
+	);
 }

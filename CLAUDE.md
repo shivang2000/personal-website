@@ -2,6 +2,8 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+> **Note:** See [ARCHITECTURE.md](./ARCHITECTURE.md) for the target microservices architecture (NestJS gateway + gRPC services).
+
 ## Development Commands
 
 ```bash
