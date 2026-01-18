@@ -3,9 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 
 interface UseScrollAnimationOptions {
-	threshold?: number;
-	rootMargin?: string;
-	triggerOnce?: boolean;
+  threshold?: number;
+  rootMargin?: string;
+  triggerOnce?: boolean;
 }
 
 /**
@@ -19,47 +19,45 @@ interface UseScrollAnimationOptions {
  * @returns { ref, isVisible } - Ref to attach to element, visibility state
  */
 export function useScrollAnimation<T extends HTMLElement = HTMLDivElement>({
-	threshold = 0.1,
-	rootMargin = "0px",
-	triggerOnce = true,
+  threshold = 0.1,
+  rootMargin = "0px",
+  triggerOnce = true,
 }: UseScrollAnimationOptions = {}) {
-	const ref = useRef<T>(null);
-	const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef<T>(null);
+  const [isVisible, setIsVisible] = useState(false);
 
-	useEffect(() => {
-		const element = ref.current;
-		if (!element) return;
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
 
-		// Check for reduced motion preference
-		const prefersReducedMotion = window.matchMedia(
-			"(prefers-reduced-motion: reduce)",
-		).matches;
+    // Check for reduced motion preference
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-		if (prefersReducedMotion) {
-			setIsVisible(true);
-			return;
-		}
+    if (prefersReducedMotion) {
+      setIsVisible(true);
+      return;
+    }
 
-		const observer = new IntersectionObserver(
-			([entry]) => {
-				if (entry?.isIntersecting) {
-					setIsVisible(true);
-					if (triggerOnce) {
-						observer.disconnect();
-					}
-				} else if (!triggerOnce) {
-					setIsVisible(false);
-				}
-			},
-			{ threshold, rootMargin },
-		);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) {
+          setIsVisible(true);
+          if (triggerOnce) {
+            observer.disconnect();
+          }
+        } else if (!triggerOnce) {
+          setIsVisible(false);
+        }
+      },
+      { threshold, rootMargin },
+    );
 
-		observer.observe(element);
+    observer.observe(element);
 
-		return () => observer.disconnect();
-	}, [threshold, rootMargin, triggerOnce]);
+    return () => observer.disconnect();
+  }, [threshold, rootMargin, triggerOnce]);
 
-	return { ref, isVisible };
+  return { ref, isVisible };
 }
 
 /**
@@ -67,16 +65,16 @@ export function useScrollAnimation<T extends HTMLElement = HTMLDivElement>({
  * Returns isVisible state and a helper to generate delay classes.
  */
 export function useStaggerAnimation<T extends HTMLElement = HTMLDivElement>(
-	options: UseScrollAnimationOptions = {},
+  options: UseScrollAnimationOptions = {},
 ) {
-	const { ref, isVisible } = useScrollAnimation<T>(options);
+  const { ref, isVisible } = useScrollAnimation<T>(options);
 
-	const getStaggerDelay = (index: number, baseDelayMs = 100) => {
-		const delay = index * baseDelayMs;
-		// Clamp to available delay classes (100-1000ms)
-		const clampedDelay = Math.min(delay, 1000);
-		return `animation-delay-${clampedDelay}` as const;
-	};
+  const getStaggerDelay = (index: number, baseDelayMs = 100) => {
+    const delay = index * baseDelayMs;
+    // Clamp to available delay classes (100-1000ms)
+    const clampedDelay = Math.min(delay, 1000);
+    return `animation-delay-${clampedDelay}` as const;
+  };
 
-	return { ref, isVisible, getStaggerDelay };
+  return { ref, isVisible, getStaggerDelay };
 }

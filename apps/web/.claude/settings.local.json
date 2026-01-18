@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__serena__get_symbols_overview",
+      "Bash(bun install:*)",
+      "Bash(docker compose build:*)",
+      "Bash(docker compose:*)",
+      "Bash(curl:*)",
+      "Bash(docker run:*)",
+      "Bash(docker images:*)",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_take_screenshot",
+      "mcp__playwright__browser_close",
+      "Bash(docker buildx build:*)",
+      "Bash(git -C /Users/shivang/dev/personal-project/personal-website log --oneline -20)",
+      "mcp__plugin_serena_serena__list_dir",
+      "mcp__better-auth__search",
+      "mcp__sequential-thinking__sequentialthinking"
+    ]
+  }
+}

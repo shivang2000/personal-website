@@ -5,6 +5,7 @@ This document outlines the target microservices architecture for the personal we
 ## Overview
 
 A hybrid architecture using:
+
 - **tRPC** for frontend-to-gateway communication (type-safe DX)
 - **gRPC** for inter-service communication (high performance, binary protocol)
 - **NestJS** as the framework for gateway and all microservices
@@ -31,11 +32,11 @@ A hybrid architecture using:
 
 ## Why This Architecture
 
-| Layer | Protocol | Reasoning |
-|-------|----------|-----------|
-| Frontend ↔ Gateway | tRPC | Type inference in React, React Query integration, excellent DX |
-| Gateway ↔ Services | gRPC | Binary protocol (~10x faster than JSON), HTTP/2 multiplexing |
-| Service ↔ Service | gRPC | Low latency, streaming support, language-agnostic |
+| Layer              | Protocol | Reasoning                                                      |
+| ------------------ | -------- | -------------------------------------------------------------- |
+| Frontend ↔ Gateway | tRPC     | Type inference in React, React Query integration, excellent DX |
+| Gateway ↔ Services | gRPC     | Binary protocol (~10x faster than JSON), HTTP/2 multiplexing   |
+| Service ↔ Service  | gRPC     | Low latency, streaming support, language-agnostic              |
 
 ## Monorepo Structure
 
@@ -80,6 +81,7 @@ personal-website/
 ## Service Responsibilities
 
 ### Gateway (`apps/gateway`)
+
 - Exposes tRPC API to frontend
 - Authenticates requests (JWT validation)
 - Routes requests to appropriate microservices via gRPC
@@ -87,18 +89,21 @@ personal-website/
 - Rate limiting and request validation
 
 ### Blogs Service (`apps/blogs-service`)
+
 - Blog post CRUD operations
 - Categories and tags management
 - Search and filtering
 - Draft/publish workflow
 
 ### Docs Service (`apps/docs-service`)
+
 - Documentation pages management
 - Version management
 - MDX/Markdown processing
 - Navigation structure
 
 ### Core Service (`apps/core-service`)
+
 - Homepage content
 - Site configuration
 - Contact form handling
@@ -452,6 +457,7 @@ Add script to generate TypeScript types from proto files:
 ## Environment Variables
 
 ### Gateway
+
 ```env
 PORT=3000
 CORS_ORIGIN=http://localhost:3001
@@ -462,18 +468,21 @@ JWT_SECRET=your-secret-key
 ```
 
 ### Blogs Service
+
 ```env
 PORT=5001
 DATABASE_URL=postgresql://user:pass@localhost:5432/blogs_db
 ```
 
 ### Docs Service
+
 ```env
 PORT=5002
 DATABASE_URL=postgresql://user:pass@localhost:5432/docs_db
 ```
 
 ### Core Service
+
 ```env
 PORT=5003
 DATABASE_URL=postgresql://user:pass@localhost:5432/core_db
@@ -592,24 +601,28 @@ bun add -D ts-proto protobufjs
 ## Migration Path
 
 ### Phase 1: Gateway Setup
+
 1. Create `apps/gateway` with NestJS
 2. Move existing tRPC router to gateway
 3. Keep current Express server as `core-service` temporarily
 4. Verify frontend still works
 
 ### Phase 2: Extract First Microservice
+
 1. Create `apps/blogs-service` with gRPC
 2. Define `blogs.proto`
 3. Add gRPC client to gateway
 4. Update tRPC router to proxy to blogs service
 
 ### Phase 3: Complete Extraction
+
 1. Create `apps/docs-service`
 2. Create `apps/core-service`
 3. Remove old Express server
 4. Set up Docker Compose for local dev
 
 ### Phase 4: Production Readiness
+
 1. Add health checks to all services
 2. Implement distributed tracing (OpenTelemetry)
 3. Add service mesh or load balancer configuration
@@ -619,11 +632,11 @@ bun add -D ts-proto protobufjs
 
 ## Trade-offs
 
-| Aspect | Benefit | Cost |
-|--------|---------|------|
-| Type safety | Proto → TS codegen keeps types in sync | Extra build step for proto compilation |
-| Performance | gRPC is significantly faster than HTTP/JSON | Harder to debug (binary protocol) |
-| Scalability | Services scale independently | More infrastructure to manage |
-| Flexibility | Services can use different languages | Team needs to learn gRPC |
-| Frontend DX | tRPC unchanged, excellent inference | Gateway becomes translation layer |
-| Local dev | Docker Compose orchestrates everything | Higher resource usage |
+| Aspect      | Benefit                                     | Cost                                   |
+| ----------- | ------------------------------------------- | -------------------------------------- |
+| Type safety | Proto → TS codegen keeps types in sync      | Extra build step for proto compilation |
+| Performance | gRPC is significantly faster than HTTP/JSON | Harder to debug (binary protocol)      |
+| Scalability | Services scale independently                | More infrastructure to manage          |
+| Flexibility | Services can use different languages        | Team needs to learn gRPC               |
+| Frontend DX | tRPC unchanged, excellent inference         | Gateway becomes translation layer      |
+| Local dev   | Docker Compose orchestrates everything      | Higher resource usage                  |

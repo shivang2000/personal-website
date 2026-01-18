@@ -1,0 +1,140 @@
+# ═══════════════════════════════════════════════════════════════
+# Envoy Proxy Configuration - HTTPS with Let's Encrypt
+# Domain: shivangchheda.dev
+# ═══════════════════════════════════════════════════════════════
+#
+# FLOW:
+# Port 80:  ACME challenges → certbot webroot
+#           Everything else → Redirect to HTTPS
+# Port 443: TLS termination → Next.js app
+#
+# ═══════════════════════════════════════════════════════════════
+
+admin:
+  address:
+    socket_address:
+      address: 0.0.0.0
+      port_value: 9901
+
+static_resources:
+  # ─────────────────────────────────────────────────────────────
+  # LISTENERS
+  # ─────────────────────────────────────────────────────────────
+  listeners:
+    # ───────────────────────────────────────────────────────────
+    # HTTP Listener (Port 80)
+    # - Serves ACME challenges for Let's Encrypt
+    # - Redirects all other traffic to HTTPS
+    # ───────────────────────────────────────────────────────────
+    - name: listener_http
+      address:
+        socket_address:
+          address: 0.0.0.0
+          port_value: 80
+      filter_chains:
+        - filters:
+            - name: envoy.filters.network.http_connection_manager
+              typed_config:
+                "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+                stat_prefix: ingress_http
+                codec_type: AUTO
+                route_config:
+                  name: http_route
+                  virtual_hosts:
+                    - name: http_host
+                      domains: ["*"]
+                      routes:
+                        # ACME challenge route (Let's Encrypt verification)
+                        - match:
+                            prefix: "/.well-known/acme-challenge/"
+                          route:
+                            cluster: certbot_webroot
+                        # Redirect everything else to HTTPS
+                        - match:
+                            prefix: "/"
+                          redirect:
+                            https_redirect: true
+                            response_code: MOVED_PERMANENTLY
+                http_filters:
+                  - name: envoy.filters.http.router
+                    typed_config:
+                      "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
+
+    # ───────────────────────────────────────────────────────────
+    # HTTPS Listener (Port 443)
+    # - TLS termination with Let's Encrypt certs
+    # - Routes to Next.js app
+    # ───────────────────────────────────────────────────────────
+    - name: listener_https
+      address:
+        socket_address:
+          address: 0.0.0.0
+          port_value: 443
+      filter_chains:
+        - filters:
+            - name: envoy.filters.network.http_connection_manager
+              typed_config:
+                "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+                stat_prefix: ingress_https
+                codec_type: AUTO
+                route_config:
+                  name: https_route
+                  virtual_hosts:
+                    - name: portfolio
+                      domains: ["*"]
+                      routes:
+                        - match:
+                            prefix: "/"
+                          route:
+                            cluster: web_service
+                            timeout: 30s
+                http_filters:
+                  - name: envoy.filters.http.router
+                    typed_config:
+                      "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
+          # TLS configuration - certs from Let's Encrypt
+          transport_socket:
+            name: envoy.transport_sockets.tls
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.DownstreamTlsContext
+              common_tls_context:
+                tls_certificates:
+                  - certificate_chain:
+                      filename: /etc/letsencrypt/live/shivangchheda.dev/fullchain.pem
+                    private_key:
+                      filename: /etc/letsencrypt/live/shivangchheda.dev/privkey.pem
+
+  # ─────────────────────────────────────────────────────────────
+  # CLUSTERS
+  # ─────────────────────────────────────────────────────────────
+  clusters:
+    # Next.js application
+    - name: web_service
+      type: STRICT_DNS
+      lb_policy: ROUND_ROBIN
+      connect_timeout: 5s
+      load_assignment:
+        cluster_name: web_service
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: web
+                      port_value: 3000
+
+    # Certbot webroot for ACME challenges
+    # Serves static files from /var/www/certbot
+    - name: certbot_webroot
+      type: STRICT_DNS
+      lb_policy: ROUND_ROBIN
+      connect_timeout: 5s
+      load_assignment:
+        cluster_name: certbot_webroot
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: acme-server
+                      port_value: 80

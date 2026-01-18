@@ -1,0 +1,42 @@
+services:
+  envoy:
+    image: shivang2000/personal-website-envoy:latest
+    ports:
+      - "80:80"
+      - "443:443"
+      - "9901:9901"
+    volumes:
+      - letsencrypt:/etc/letsencrypt:ro
+    depends_on:
+      - web
+      - acme-server
+    restart: unless-stopped
+
+  acme-server:
+    image: nginx:alpine
+    volumes:
+      - certbot-webroot:/usr/share/nginx/html:ro
+    expose:
+      - "80"
+    restart: unless-stopped
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - letsencrypt:/etc/letsencrypt
+      - certbot-webroot:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot; sleep 12h & wait $${!}; done'"
+    restart: unless-stopped
+
+  web:
+    image: shivang2000/personal-website:latest
+    expose:
+      - "3000"
+    environment:
+      - NODE_ENV=production
+      - HOSTNAME=0.0.0.0
+    restart: unless-stopped
+
+volumes:
+  letsencrypt:
+  certbot-webroot:

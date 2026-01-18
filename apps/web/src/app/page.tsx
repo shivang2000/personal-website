@@ -15,14 +15,14 @@ import { Footer } from "@/components/layout/footer";
  * - Professional, trustworthy aesthetic
  */
 export default function Home() {
-	return (
-		<>
-			<Hero />
-			<Stats />
-			<Skills />
-			<Projects />
-			<ContactCTA />
-			<Footer />
-		</>
-	);
+  return (
+    <>
+      <Hero />
+      <Stats />
+      <Skills />
+      <Projects />
+      <ContactCTA />
+      <Footer />
+    </>
+  );
 }

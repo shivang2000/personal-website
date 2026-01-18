@@ -28,7 +28,7 @@
 
   /* Secondary - Warm Taupe */
   --secondary: oklch(0.93 0.015 80);
-  --secondary-foreground: oklch(0.30 0.02 280);
+  --secondary-foreground: oklch(0.3 0.02 280);
 
   /* Muted - Soft Gray */
   --muted: oklch(0.94 0.008 80);
@@ -42,16 +42,16 @@
   --destructive: oklch(0.58 0.22 27);
 
   /* Borders - Subtle Warm */
-  --border: oklch(0.90 0.015 80);
-  --input: oklch(0.90 0.015 80);
+  --border: oklch(0.9 0.015 80);
+  --input: oklch(0.9 0.015 80);
   --ring: oklch(0.72 0.14 65);
 
   /* Chart Colors */
   --chart-1: oklch(0.72 0.14 65);
   --chart-2: oklch(0.65 0.12 150);
   --chart-3: oklch(0.58 0.15 200);
-  --chart-4: oklch(0.50 0.12 280);
-  --chart-5: oklch(0.45 0.10 320);
+  --chart-4: oklch(0.5 0.12 280);
+  --chart-5: oklch(0.45 0.1 320);
 
   --radius: 0.5rem;
 
@@ -62,7 +62,7 @@
   --sidebar-primary-foreground: oklch(0.97 0.008 85);
   --sidebar-accent: oklch(0.94 0.012 80);
   --sidebar-accent-foreground: oklch(0.22 0.02 280);
-  --sidebar-border: oklch(0.90 0.015 80);
+  --sidebar-border: oklch(0.9 0.015 80);
   --sidebar-ring: oklch(0.72 0.14 65);
 }
 
@@ -96,7 +96,7 @@
   --accent-foreground: oklch(0.94 0.008 85);
 
   /* Destructive */
-  --destructive: oklch(0.70 0.19 22);
+  --destructive: oklch(0.7 0.19 22);
 
   /* Borders */
   --border: oklch(0.28 0.015 280);
@@ -105,7 +105,7 @@
 
   /* Chart Colors */
   --chart-1: oklch(0.68 0.13 65);
-  --chart-2: oklch(0.60 0.11 150);
+  --chart-2: oklch(0.6 0.11 150);
   --chart-3: oklch(0.55 0.14 200);
   --chart-4: oklch(0.48 0.11 280);
   --chart-5: oklch(0.42 0.09 320);
@@ -259,7 +259,8 @@
 }
 
 @keyframes pulse-subtle {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -306,16 +307,36 @@
 }
 
 /* Animation Delays */
-.animation-delay-100 { animation-delay: 100ms; }
-.animation-delay-200 { animation-delay: 200ms; }
-.animation-delay-300 { animation-delay: 300ms; }
-.animation-delay-400 { animation-delay: 400ms; }
-.animation-delay-500 { animation-delay: 500ms; }
-.animation-delay-600 { animation-delay: 600ms; }
-.animation-delay-700 { animation-delay: 700ms; }
-.animation-delay-800 { animation-delay: 800ms; }
-.animation-delay-900 { animation-delay: 900ms; }
-.animation-delay-1000 { animation-delay: 1000ms; }
+.animation-delay-100 {
+  animation-delay: 100ms;
+}
+.animation-delay-200 {
+  animation-delay: 200ms;
+}
+.animation-delay-300 {
+  animation-delay: 300ms;
+}
+.animation-delay-400 {
+  animation-delay: 400ms;
+}
+.animation-delay-500 {
+  animation-delay: 500ms;
+}
+.animation-delay-600 {
+  animation-delay: 600ms;
+}
+.animation-delay-700 {
+  animation-delay: 700ms;
+}
+.animation-delay-800 {
+  animation-delay: 800ms;
+}
+.animation-delay-900 {
+  animation-delay: 900ms;
+}
+.animation-delay-1000 {
+  animation-delay: 1000ms;
+}
 
 /* Initial state for animated elements */
 .animate-on-scroll {

@@ -1,0 +1,43 @@
+# ═══════════════════════════════════════════════════════════════
+# Custom Envoy Image with HTTPS Support
+# Handles bootstrap: creates dummy certs if real ones don't exist
+# ═══════════════════════════════════════════════════════════════
+
+FROM envoyproxy/envoy:v1.28-latest
+
+# Install openssl for generating dummy certs
+RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
+
+# Copy Envoy configuration
+COPY envoy.yaml /etc/envoy/envoy.yaml
+
+# Create entrypoint script that handles cert bootstrap
+RUN cat > /docker-entrypoint.sh << 'EOF'
+#!/bin/bash
+set -e
+
+CERT_PATH="/etc/letsencrypt/live/shivangchheda.dev"
+CERT_FILE="$CERT_PATH/fullchain.pem"
+KEY_FILE="$CERT_PATH/privkey.pem"
+
+# If real certs don't exist, create self-signed placeholder
+if [ ! -f "$CERT_FILE" ] || [ ! -f "$KEY_FILE" ]; then
+    echo "⚠️  No Let's Encrypt certs found. Creating temporary self-signed certs..."
+    mkdir -p "$CERT_PATH"
+    openssl req -x509 -nodes -newkey rsa:2048 \
+        -keyout "$KEY_FILE" \
+        -out "$CERT_FILE" \
+        -days 1 \
+        -subj "/CN=shivangchheda.dev"
+    echo "✅ Temporary certs created. Run certbot to get real certs."
+fi
+
+# Start Envoy
+exec envoy -c /etc/envoy/envoy.yaml "$@"
+EOF
+
+RUN chmod +x /docker-entrypoint.sh
+
+EXPOSE 80 443 9901
+
+ENTRYPOINT ["/docker-entrypoint.sh"]
