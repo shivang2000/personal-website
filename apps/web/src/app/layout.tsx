@@ -47,9 +47,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${sora.variable} ${jetbrainsMono.variable} antialiased`}
-      >
+      <body className={`${sora.variable} ${jetbrainsMono.variable} antialiased`}>
         <Providers>
           <div className="flex min-h-svh flex-col">
             <Header />
