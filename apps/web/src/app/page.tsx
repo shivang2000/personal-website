@@ -8,11 +8,11 @@ import { Footer } from "@/components/layout/footer";
 /**
  * Portfolio Homepage
  *
- * Editorial Luxury Tech design featuring:
- * - Warm cream background with amber accents
- * - Playfair Display serif headlines
- * - Elegant scroll-triggered animations
- * - Professional, trustworthy aesthetic
+ * Dark & Techy design featuring:
+ * - Deep blue-black background with neon green accents
+ * - Sora sans-serif + JetBrains Mono terminal typography
+ * - GSAP scroll-triggered animations + Lenis smooth scroll
+ * - Developer-focused, high-signal aesthetic
  */
 export default function Home() {
   return (
