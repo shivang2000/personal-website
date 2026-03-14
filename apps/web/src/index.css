@@ -86,7 +86,7 @@
 
 @theme inline {
   /* Typography */
-  --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Sora", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
   /* Color Mappings */
