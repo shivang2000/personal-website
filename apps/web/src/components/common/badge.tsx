@@ -14,12 +14,12 @@ export function Badge({ children, variant = "default", pulse = false, className 
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium transition-colors",
+        "inline-flex items-center gap-2 rounded-full px-4 py-1.5 font-mono text-sm font-medium transition-colors",
         {
           // Default - subtle background
           "bg-secondary text-secondary-foreground": variant === "default",
           // Accent - amber highlight
-          "bg-accent/15 text-accent-foreground border border-accent/30": variant === "accent",
+          "bg-card text-accent border border-accent/30": variant === "accent",
           // Outline - bordered
           "border border-border bg-transparent text-foreground": variant === "outline",
         },

@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { useScrollAnimation } from "@/hooks/use-scroll-animation";
+import { useFadeInScale } from "@/hooks/use-gsap-animation";
 
 interface SectionHeadingProps {
   title: string;
@@ -20,7 +20,7 @@ export function SectionHeading({
   align = "left",
   className,
 }: SectionHeadingProps) {
-  const { ref, isVisible } = useScrollAnimation({ threshold: 0.2 });
+  const ref = useFadeInScale();
 
   return (
     <div
@@ -36,19 +36,14 @@ export function SectionHeading({
     >
       <div className={cn("inline-block", align === "center" && "w-full")}>
         <h2
-          className={cn(
-            "text-section-title font-serif font-semibold tracking-tight text-foreground",
-            "opacity-0",
-            isVisible && "animate-fade-in-up",
-          )}
+          className="text-section-title font-sans font-bold tracking-tight text-foreground"
         >
           {title}
         </h2>
         {/* Decorative wavy underline */}
         <svg
           className={cn(
-            "mt-2 h-2 w-32 opacity-0",
-            isVisible && "animate-fade-in animation-delay-300",
+            "mt-2 h-2 w-32",
             align === "center" && "mx-auto",
           )}
           viewBox="0 0 120 8"
@@ -63,8 +58,8 @@ export function SectionHeading({
           />
           <defs>
             <linearGradient id="gradient" x1="0" y1="0" x2="120" y2="0">
-              <stop offset="0%" stopColor="oklch(0.72 0.14 65)" />
-              <stop offset="100%" stopColor="oklch(0.65 0.12 45)" />
+              <stop offset="0%" stopColor="oklch(0.82 0.22 155)" />
+              <stop offset="100%" stopColor="oklch(0.6 0.2 155)" />
             </linearGradient>
           </defs>
         </svg>
@@ -73,8 +68,6 @@ export function SectionHeading({
         <p
           className={cn(
             "text-body-lg max-w-2xl text-muted-foreground",
-            "opacity-0",
-            isVisible && "animate-fade-in-up animation-delay-200",
             align === "center" && "mx-auto",
           )}
         >
