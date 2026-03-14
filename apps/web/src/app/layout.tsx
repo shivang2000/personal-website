@@ -1,18 +1,12 @@
 import type { Metadata } from "next";
 
-import { Playfair_Display, DM_Sans, JetBrains_Mono } from "next/font/google";
+import { JetBrains_Mono, Sora } from "next/font/google";
 
 import "../index.css";
 import Header from "@/components/header";
 import Providers from "@/components/providers";
 
-const playfair = Playfair_Display({
-  variable: "--font-serif",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const dmSans = DM_Sans({
+const sora = Sora({
   variable: "--font-sans",
   subsets: ["latin"],
   display: "swap",
@@ -54,7 +48,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${playfair.variable} ${dmSans.variable} ${jetbrainsMono.variable} antialiased`}
+        className={`${sora.variable} ${jetbrainsMono.variable} antialiased`}
       >
         <Providers>
           <div className="flex min-h-svh flex-col">
