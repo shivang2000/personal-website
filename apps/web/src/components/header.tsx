@@ -28,7 +28,7 @@ export default function Header() {
     <header
       className={cn(
         "sticky top-0 z-50 transition-all duration-300",
-        isScrolled ? "border-b border-border bg-background/95 backdrop-blur-sm" : "bg-transparent",
+        isScrolled ? "border-b border-border bg-background/80 backdrop-blur-md" : "bg-transparent",
       )}
     >
       <div className="container mx-auto max-w-5xl px-6">
@@ -36,7 +36,7 @@ export default function Header() {
           {/* Logo / Name */}
           <Link
             href="/"
-            className="font-serif text-xl font-semibold tracking-tight text-foreground transition-colors hover:text-accent"
+            className="font-sans text-xl font-bold tracking-tight text-foreground transition-colors hover:text-accent"
           >
             SC
           </Link>
@@ -47,7 +47,7 @@ export default function Header() {
               <a
                 key={href}
                 href={href}
-                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                className="font-mono text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
               >
                 {label}
               </a>
@@ -61,7 +61,7 @@ export default function Header() {
               href="https://docs.google.com/document/d/1KeM7MY88dSPeQmXlcjcM-QSd_nDEe7gEx2i1V6WVw6g/edit"
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden text-sm font-medium text-muted-foreground transition-colors hover:text-foreground sm:inline-flex"
+              className="hidden font-mono text-sm font-medium text-muted-foreground transition-colors hover:text-foreground sm:inline-flex"
             >
               Resume
             </a>
