@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-interface TagProps {
+interface TagProps extends React.HTMLAttributes<HTMLSpanElement> {
   children: React.ReactNode;
   variant?: "default" | "outline" | "filled";
   size?: "sm" | "md";
@@ -11,9 +11,10 @@ interface TagProps {
  * Skill/technology tag component with editorial styling.
  * Features subtle hover lift and border color transition.
  */
-export function Tag({ children, variant = "default", size = "md", className }: TagProps) {
+export function Tag({ children, variant = "default", size = "md", className, ...rest }: TagProps) {
   return (
     <span
+      {...rest}
       className={cn(
         "inline-flex items-center rounded-md font-mono font-medium transition-all duration-200",
         "hover:-translate-y-0.5 hover:shadow-sm",
