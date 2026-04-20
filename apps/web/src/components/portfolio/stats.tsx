@@ -25,6 +25,7 @@ function parseStatValue(value: string): {
  */
 function StatItem({ stat }: { stat: (typeof stats)[number] }) {
 	const { prefix, number, suffix } = parseStatValue(stat.value);
+	const hasNumeric = /\d/.test(stat.value);
 	const { ref, formattedValue } = useCountUp(number, {
 		prefix,
 		suffix,
@@ -33,9 +34,13 @@ function StatItem({ stat }: { stat: (typeof stats)[number] }) {
 
 	return (
 		<div className="rounded-xl border border-border bg-card p-6 text-center transition-colors hover:border-accent/30">
-			{/* Large number */}
-			<div className="font-mono text-5xl font-bold text-accent md:text-6xl">
-				<span ref={ref}>{formattedValue}</span>
+			{/* Large value */}
+			<div className="font-mono text-3xl font-bold text-accent md:text-4xl">
+				{hasNumeric ? (
+					<span ref={ref}>{formattedValue}</span>
+				) : (
+					<span>{stat.value}</span>
+				)}
 			</div>
 
 			{/* Label */}
@@ -54,7 +59,7 @@ export function Stats() {
 	return (
 		<section id="stats" className="border-y border-border bg-card/50 py-16">
 			<div className="container mx-auto max-w-5xl px-6">
-				<div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-12">
+				<div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
 					{stats.map((stat) => (
 						<StatItem key={stat.label} stat={stat} />
 					))}
