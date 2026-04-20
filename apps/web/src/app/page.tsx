@@ -1,5 +1,6 @@
 import { Hero } from "@/components/portfolio/hero";
 import { Stats } from "@/components/portfolio/stats";
+import { OpenSource } from "@/components/portfolio/open-source";
 import { Skills } from "@/components/portfolio/skills";
 import { Projects } from "@/components/portfolio/projects";
 import { ContactCTA } from "@/components/portfolio/contact-cta";
@@ -19,8 +20,9 @@ export default function Home() {
     <>
       <Hero />
       <Stats />
-      <Skills />
       <Projects />
+      <OpenSource />
+      <Skills />
       <ContactCTA />
       <Footer />
     </>
