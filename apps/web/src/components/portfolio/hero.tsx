@@ -144,6 +144,10 @@ export function Hero() {
 									Available for Hire
 								</Badge>
 							)}
+							<Badge variant="accent">
+								<Zap className="mr-1 h-3 w-3" />
+								AI-Native
+							</Badge>
 							<Badge variant="outline">
 								<Sparkles className="mr-1 h-3 w-3" />
 								Web3 / Blockchain
@@ -183,11 +187,7 @@ export function Hero() {
 								</span>
 							</div>
 							<p className="text-body-lg max-w-xl text-muted-foreground">
-								{personalInfo.subHeadline}. I combine{" "}
-								<span className="font-medium text-foreground">
-									3+ years of deep engineering experience
-								</span>{" "}
-								with AI tools to deliver faster without sacrificing quality.
+								{personalInfo.subHeadline}
 							</p>
 						</div>
 
@@ -201,11 +201,8 @@ export function Hero() {
 							<span className="text-foreground">
 								React, TypeScript, Node.js, Go
 							</span>{" "}
-							— now exploring{" "}
-							<span className="text-foreground">
-								Web3, Solidity, and decentralized apps
-							</span>
-							.
+							— AI-native workflow with{" "}
+							<span className="text-foreground">Claude Code and Codex</span>.
 						</p>
 
 						{/* Location */}
@@ -225,10 +222,10 @@ export function Hero() {
 							className="flex flex-wrap gap-4 pt-4"
 						>
 							<a
-								href="#contact"
+								href={`mailto:${personalInfo.email}?subject=${encodeURIComponent("Role at [Company] — let's talk")}`}
 								className="inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-6 py-3 text-sm font-medium text-accent-foreground transition-all hover:bg-accent/90 hover:shadow-lg"
 							>
-								Get in Touch
+								Hire me
 							</a>
 							<a
 								href="#projects"
