@@ -5,33 +5,26 @@
 export const personalInfo = {
   name: "Shivang Chheda",
   title: "Full-Stack Engineer",
-  tagline: "Building high-performance applications for US remote teams",
-  headline: "I ship 10x faster with AI-assisted development",
+  tagline: "Full-stack engineer who ships like a founding engineer. AI-tools-native.",
+  headline: "I ship like a founding engineer, AI-tools-native",
   subHeadline:
-    "Deep engineering fundamentals + AI tools like Claude Code = rapid, quality delivery",
-  location: "Remote (India) • US/EU Time Zones",
+    "4+ years shipping end-to-end at US startups from India — always remote, always async. Claude Code + Codex as daily core workflow, not a gimmick.",
+  location:
+    "Based in India · IST / EU CET / US EST-PST overlap · Remote contractor, no visa",
   email: "shivangchheda@gmail.com",
   phone: "+91-9029722073",
   linkedin: "https://www.linkedin.com/in/shivang-chheda-83400415a/",
   github: "https://github.com/shivang2000",
   calendly: "https://calendly.com/shivangchheda/15min",
   isAvailable: true,
-  seekingRoles: ["Web3", "Blockchain", "Full-Stack", "Frontend"],
+  seekingRoles: ["Full-Stack", "AI-Native", "Forward Deployed", "Web3"],
 };
 
 export const stats = [
-  {
-    value: "3+",
-    label: "Years Experience",
-  },
-  {
-    value: "10x",
-    label: "Faster with AI Tools",
-  },
-  {
-    value: "$100K+",
-    label: "Client Value Generated",
-  },
+  { value: "$100K ARR", label: "FactWise enterprise client won" },
+  { value: "2–3×", label: "Trestle self-serve revenue lift" },
+  { value: "Enterprise", label: "Zania SOC 2 client closed" },
+  { value: "Peak load", label: "Wow Rooms Go API, festival traffic" },
 ];
 
 export interface Project {
@@ -42,6 +35,7 @@ export interface Project {
   period: string;
   role: string;
   description: string;
+  heroMetric: string;
   impact: string[];
   techStack: string[];
   featured: boolean;
@@ -54,11 +48,12 @@ export const projects: Project[] = [
     company: "Trestle",
     companyLocation: "Washington, Remote",
     period: "Jul 2025 - Present",
-    role: "Software Engineer, Frontend",
+    role: "Software Engineer, Developer Portal",
     description:
-      "Enhancing product features for user engagement and retention at a US-based startup. Taking ownership of complex features from diagnosis through production deployment.",
+      "Redesigning the developer portal to drive self-serve adoption. Taking ownership of complex features from diagnosis through production deployment.",
+    heroMetric: "2–3× Self-Serve Revenue Lift",
     impact: [
-      "Improved and enhanced existing product features to increase user engagement and retention",
+      "Portal redesign drove a 2–3× lift in self-serve revenue",
       "Took ownership of complex features independently, from diagnosis to production-ready solutions",
       "Collaborated with product and design teams to refine UX and performance of critical user flows",
     ],
@@ -74,6 +69,7 @@ export const projects: Project[] = [
     role: "Software Engineer, Frontend",
     description:
       "Built AI-powered compliance features that streamlined SOC 2 auditing for enterprise clients. Worked closely with US-based teams across time zones.",
+    heroMetric: "Enterprise Client Closed",
     impact: [
       "Implemented SOC 2 Type II compliance features within the compliance AI agent",
       "Directly contributed to winning a new enterprise client",
@@ -91,6 +87,7 @@ export const projects: Project[] = [
     role: "Frontend Engineer",
     description:
       "Led development of complex, data-intensive dashboards and the Bill of Materials module for enterprise procurement workflows.",
+    heroMetric: "$100K ARR Client Won",
     impact: [
       "Owned end-to-end development of BOM module - a critical feature securing $100K ARR enterprise client",
       "Designed recursive BOM structures handling nested items with hundreds of entries",
@@ -109,6 +106,7 @@ export const projects: Project[] = [
     role: "SDE I",
     description:
       "Led frontend development and built high-performance backend services for a hotel booking platform handling festival peak traffic.",
+    heroMetric: "Held Festival Peak Traffic",
     impact: [
       "Led frontend development for vendor-facing mobile application",
       "Developed high-performance search API in Go handling peak traffic without degradation",
@@ -128,31 +126,71 @@ export interface SkillCategory {
 
 export const skillCategories: SkillCategory[] = [
   {
-    title: "Frontend",
-    description: "Building performant, accessible user interfaces",
-    skills: ["React", "Next.js", "TypeScript", "Redux", "TailwindCSS", "React Query"],
+    title: "Core, shipping daily",
+    description: "Primary stack on every role this year",
+    skills: ["React", "Next.js", "TypeScript", "TailwindCSS", "Node.js"],
   },
   {
-    title: "Backend",
-    description: "Scalable APIs and server-side systems",
-    skills: ["Node.js", "Go", "Express.js", "PostgreSQL", "MongoDB", "RESTful APIs"],
+    title: "Backend depth",
+    description: "Server-side systems I've owned end-to-end",
+    skills: ["Go", "Express.js", "Prisma", "PostgreSQL", "REST", "gRPC"],
   },
   {
-    title: "Web3 & Blockchain",
-    description: "Exploring decentralized technologies",
-    skills: ["Solidity", "Ethers.js", "Smart Contracts", "DeFi", "NFTs", "Web3.js"],
+    title: "Distributed systems",
+    description: "Infrastructure and multi-region design",
+    skills: ["Docker", "Kubernetes", "AWS", "Microservices", "Multi-region"],
   },
   {
-    title: "AI-Augmented Development",
-    description: "10x productivity with modern AI tools",
-    skills: [
-      "Claude Code",
-      "AI Pair Programming",
-      "Rapid Prototyping",
-      "Code Review with AI",
-      "Deep Fundamentals",
-      "System Design",
-    ],
+    title: "AI workflow",
+    description: "Daily use for navigation, architecture, debugging",
+    skills: ["Claude Code", "Codex", "AI Pair Programming", "Agent-native repos"],
+  },
+  {
+    title: "Web3 (exploring)",
+    description: "Secondary interest — available for blockchain roles",
+    skills: ["Solidity", "Ethers.js", "Smart Contracts"],
+  },
+];
+
+export interface OpenSourceContribution {
+  id: string;
+  project: string;
+  repo: string;
+  tagline: string;
+  prTitle: string;
+  prNumber: number;
+  issueNumber: number;
+  mergedDate: string;
+  diffStats: { added: number; removed: number };
+  description: string;
+  status: "merged";
+  links: {
+    pr: string;
+    issue: string;
+    repo: string;
+  };
+}
+
+export const openSourceContributions: OpenSourceContribution[] = [
+  {
+    id: "archestra",
+    project: "Archestra",
+    repo: "archestra-ai/archestra",
+    tagline: "MCP Gateway for AI Agents",
+    prTitle:
+      "fix(chat): add copy button to code blocks in conversation artifacts",
+    prNumber: 3868,
+    issueNumber: 3243,
+    mergedDate: "2026-04",
+    diffStats: { added: 102, removed: 1 },
+    description:
+      "Wrapped ReactMarkdown-rendered fenced code in the existing CodeBlock + CodeBlockCopyButton pair using a `pre` component override, and added test coverage for single blocks, inline code, and multi-block instances. Kept the diff intentionally narrow after incorporating prior review feedback — shipped clean, focused work on an unfamiliar AI-native React/TypeScript codebase.",
+    status: "merged",
+    links: {
+      pr: "https://github.com/archestra-ai/archestra/pull/3868",
+      issue: "https://github.com/archestra-ai/archestra/issues/3243",
+      repo: "https://github.com/archestra-ai/archestra",
+    },
   },
 ];
 
