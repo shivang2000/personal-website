@@ -140,6 +140,12 @@ function TimelineItem({ project, isLast }: TimelineItemProps) {
 						</div>
 					</div>
 
+					{/* Hero metric callout */}
+					<div className="inline-flex items-center gap-2 rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-accent">
+						<span className="h-1.5 w-1.5 rounded-full bg-accent" />
+						{project.heroMetric}
+					</div>
+
 					{/* Description */}
 					<p className="text-sm text-muted-foreground">
 						{project.description}
