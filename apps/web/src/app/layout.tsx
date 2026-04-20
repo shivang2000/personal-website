@@ -19,23 +19,27 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Shivang Chheda | Full-Stack Engineer",
+  title:
+    "Shivang Chheda · Full-Stack Engineer · React · TypeScript · Node.js · Go",
   description:
-    "Frontend & Full-Stack Engineer specializing in React, TypeScript, Node.js, and Go. Building high-performance applications for US remote teams.",
+    "Full-stack engineer shipping end-to-end at US startups from India. AI-tools-native (Claude Code, Codex). Recent OSS: Archestra MCP gateway (PR #3868).",
   keywords: [
     "Full-Stack Engineer",
-    "React Developer",
+    "AI-Native Developer",
+    "Forward Deployed Engineer",
+    "React",
     "TypeScript",
+    "Next.js",
     "Node.js",
     "Go",
+    "Claude Code",
     "Remote Developer",
-    "Freelance Developer",
   ],
   authors: [{ name: "Shivang Chheda" }],
   openGraph: {
-    title: "Shivang Chheda | Full-Stack Engineer",
+    title: "Shivang Chheda — Full-Stack Engineer, AI-tools-native",
     description:
-      "Frontend & Full-Stack Engineer specializing in React, TypeScript, Node.js, and Go.",
+      "Ships like a founding engineer. $100K ARR enterprise wins, 2–3× revenue lift, merged OSS into Archestra.",
     type: "website",
   },
 };
