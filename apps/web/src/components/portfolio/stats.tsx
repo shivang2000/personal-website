@@ -2,6 +2,7 @@
 
 import { stats } from "@/lib/data/portfolio-data";
 import { useCountUp } from "@/hooks/use-gsap-animation";
+import { cn } from "@/lib/utils";
 
 /**
  * Parse a stat value like "3+", "10x", "$100K+" into its parts.
@@ -33,9 +34,16 @@ function StatItem({ stat }: { stat: (typeof stats)[number] }) {
 	});
 
 	return (
-		<div className="rounded-xl border border-border bg-card p-6 text-center transition-colors hover:border-accent/30">
-			{/* Large value */}
-			<div className="font-mono text-3xl font-bold text-accent md:text-4xl">
+		<div className="flex min-h-[140px] flex-col items-center justify-center rounded-xl border border-border bg-card p-6 text-center transition-colors hover:border-accent/30">
+			{/* Value */}
+			<div
+				className={cn(
+					"font-mono font-bold leading-tight text-accent [overflow-wrap:anywhere]",
+					hasNumeric
+						? "text-3xl md:text-4xl"
+						: "text-xl md:text-2xl",
+				)}
+			>
 				{hasNumeric ? (
 					<span ref={ref}>{formattedValue}</span>
 				) : (
@@ -44,7 +52,7 @@ function StatItem({ stat }: { stat: (typeof stats)[number] }) {
 			</div>
 
 			{/* Label */}
-			<div className="mt-2 text-sm font-medium uppercase tracking-widest text-muted-foreground">
+			<div className="mt-2 text-xs font-medium uppercase tracking-widest text-muted-foreground md:text-sm">
 				{stat.label}
 			</div>
 		</div>
