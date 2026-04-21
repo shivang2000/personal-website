@@ -23,7 +23,7 @@ export const personalInfo = {
 export const stats = [
   { value: "$100K ARR", label: "FactWise enterprise client won" },
   { value: "2–3×", label: "Trestle self-serve revenue lift" },
-  { value: "Enterprise", label: "Zania SOC 2 client closed" },
+  { value: "OSS", label: "Archestra MCP gateway · PR #3868 merged" },
   { value: "Peak load", label: "Wow Rooms Go API, festival traffic" },
 ];
 
