@@ -131,6 +131,13 @@ function TimelineItem({ project, isLast }: TimelineItemProps) {
 							<p className="text-lg font-medium text-foreground/80">
 								{project.role}
 							</p>
+
+							{/* Location / engagement type */}
+							{project.companyLocation && (
+								<p className="text-xs text-muted-foreground/80">
+									{project.companyLocation}
+								</p>
+							)}
 						</div>
 
 						{/* Period */}

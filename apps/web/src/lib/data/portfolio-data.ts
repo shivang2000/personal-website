@@ -5,10 +5,11 @@
 export const personalInfo = {
   name: "Shivang Chheda",
   title: "Full-Stack Engineer",
-  tagline: "Full-stack engineer who ships like a founding engineer. AI-tools-native.",
-  headline: "I ship like a founding engineer, AI-tools-native",
+  tagline:
+    "Product-minded frontend engineer. Ship like a founding engineer. AI-tools-native, motion-aware.",
+  headline: "I ship motion-heavy, AI-native product UIs end to end",
   subHeadline:
-    "4+ years shipping end-to-end at US startups from India — always remote, always async. Claude Code + Codex as daily core workflow, not a gimmick.",
+    "4+ years shipping at US startups from India — always remote, always async. Claude Code + Codex are my daily core workflow, not a gimmick. Currently building a freelance multi-agent travel platform end to end alongside my day job.",
   location:
     "Based in India · IST / EU CET / US EST-PST overlap · Remote contractor, no visa",
   email: "shivangchheda@gmail.com",
@@ -17,12 +18,13 @@ export const personalInfo = {
   github: "https://github.com/shivang2000",
   calendly: "https://calendly.com/shivangchheda/15min",
   isAvailable: true,
-  seekingRoles: ["Full-Stack", "AI-Native", "Forward Deployed", "Web3"],
+  seekingRoles: ["Product Engineer", "Full-Stack", "AI-Native", "Forward Deployed", "Web3"],
 };
 
 export const stats = [
   { value: "$100K ARR", label: "FactWise enterprise client won" },
   { value: "2–3×", label: "Trestle self-serve revenue lift" },
+  { value: "3-service", label: "AI Concierge freelance — solo end-to-end" },
   { value: "OSS", label: "Archestra MCP gateway · PR #3868 merged" },
   { value: "Peak load", label: "Wow Rooms Go API, festival traffic" },
 ];
@@ -42,6 +44,43 @@ export interface Project {
 }
 
 export const projects: Project[] = [
+  {
+    id: "aiconcierge",
+    name: "AI Concierge — B2C Travel Platform (Freelance)",
+    company: "AI Concierge",
+    companyLocation: "Freelance, Remote",
+    period: "2024 – Present",
+    role: "Freelance Full-Stack Engineer (solo)",
+    description:
+      "Solo-built B2C travel concierge platform — frontend, multi-agent AI backend, vendor-gateway microservice, and AWS infra. Three-service monorepo behind one consumer site.",
+    heroMetric: "Solo-Shipped 3-Service Stack",
+    impact: [
+      "Shipped 3-service monorepo solo — React 19 + Vite 7 + Tailwind 4 frontend, FastAPI multi-agent backend, vendor-gateway microservice",
+      "Built LangGraph multi-agent system on FastAPI + Postgres 15 + Redis 7 with idempotent bookings, refund/cancel guards, and ReportLab-generated PDF receipts per booking type",
+      "Unified 7-vendor canonical layer (Tripjack flights, AllAboard rail, Airalo eSIM, AirportTransfer, Sixt, TuGo, Travel Buddy) with Redis caching, circuit breakers, exponential-backoff retries, async httpx + asyncpg, Prometheus metrics",
+      "Modeled ~250 countries, 6,400+ cities, 7,500+ airports, 940+ airlines with bidirectional vendor-to-canonical mapping and audit-logged confidence scoring",
+      "Deployed on AWS EC2 + S3 + Nginx + Docker Compose with Stripe webhooks for payment finalization and Alembic numeric-revision migrations",
+    ],
+    techStack: [
+      "Freelance",
+      "React 19",
+      "TypeScript",
+      "Tailwind 4",
+      "shadcn/ui",
+      "motion",
+      "Redux Toolkit",
+      "TanStack Query",
+      "FastAPI",
+      "Python 3.13",
+      "LangGraph",
+      "Postgres",
+      "Redis",
+      "Stripe",
+      "AWS",
+      "Docker",
+    ],
+    featured: true,
+  },
   {
     id: "trestle",
     name: "Enterprise Product Platform",
@@ -128,7 +167,7 @@ export const skillCategories: SkillCategory[] = [
   {
     title: "Core, shipping daily",
     description: "Primary stack on every role this year",
-    skills: ["React", "Next.js", "TypeScript", "TailwindCSS", "Node.js"],
+    skills: ["React", "Next.js", "TypeScript", "TailwindCSS", "shadcn/ui", "motion", "Node.js"],
   },
   {
     title: "Backend depth",
