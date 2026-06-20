@@ -1,7 +1,11 @@
+# syntax=docker/dockerfile:1
 # ═══════════════════════════════════════════════════════════════
 # Custom Envoy Image with HTTPS Support
 # Handles bootstrap: creates dummy certs if real ones don't exist
 # ═══════════════════════════════════════════════════════════════
+# NOTE: the `# syntax=` line above MUST stay first — it pulls a modern
+# Dockerfile frontend so the RUN heredoc below builds even on hosts with
+# an old buildx (this EC2 box's buildx predates heredoc support).
 
 FROM envoyproxy/envoy:v1.28-latest
 
