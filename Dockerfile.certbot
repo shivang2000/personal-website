@@ -1,0 +1,14 @@
+# ═══════════════════════════════════════════════════════════════
+# Custom Certbot Image
+# Adds docker-cli so the renewal --deploy-hook can restart Envoy.
+#
+# Why: Envoy reads its TLS cert from a static `filename:` once at
+# startup and never re-reads it. certbot renewing the cert on disk
+# is not enough — Envoy must be restarted to pick it up. The
+# deploy-hook ("docker restart envoy") runs only when a cert is
+# actually renewed, and needs the docker CLI + mounted docker.sock.
+# ═══════════════════════════════════════════════════════════════
+FROM certbot/certbot
+
+# certbot/certbot is Alpine-based
+RUN apk add --no-cache docker-cli

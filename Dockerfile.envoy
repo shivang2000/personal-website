@@ -27,7 +27,7 @@ if [ ! -f "$CERT_FILE" ] || [ ! -f "$KEY_FILE" ]; then
     openssl req -x509 -nodes -newkey rsa:2048 \
         -keyout "$KEY_FILE" \
         -out "$CERT_FILE" \
-        -days 1 \
+        -days 90 \
         -subj "/CN=shivangchheda.dev"
     echo "✅ Temporary certs created. Run certbot to get real certs."
 fi

@@ -1,6 +1,7 @@
 services:
   envoy:
     image: shivang2000/personal-website-envoy:latest
+    container_name: envoy
     ports:
       - "80:80"
       - "443:443"
@@ -21,11 +22,20 @@ services:
     restart: unless-stopped
 
   certbot:
-    image: certbot/certbot
+    # Custom image: certbot/certbot + docker-cli, so the deploy-hook can
+    # restart Envoy after a successful renewal (Envoy does not hot-reload
+    # filename-based TLS certs).
+    build:
+      context: .
+      dockerfile: Dockerfile.certbot
+    image: shivang2000/personal-website-certbot:latest
     volumes:
       - letsencrypt:/etc/letsencrypt
       - certbot-webroot:/var/www/certbot
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot; sleep 12h & wait $${!}; done'"
+      # Lets the deploy-hook drive the host Docker daemon to restart Envoy.
+      # NOTE: root-equivalent host access — acceptable for this single-tenant box.
+      - /var/run/docker.sock:/var/run/docker.sock
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot --deploy-hook \"docker restart envoy\"; sleep 12h & wait $${!}; done'"
     restart: unless-stopped
 
   web:

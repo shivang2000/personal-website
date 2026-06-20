@@ -75,7 +75,61 @@ Your site is now live at `http://<YOUR_EC2_IP>:3000`
 
 ---
 
+## TLS / HTTPS — Actual Stack (Envoy + Certbot)
+
+> This is what is **actually deployed** (`docker-compose.yml`). The Nginx / CloudFront
+> options in Step 4 below are alternatives kept for reference and are **not** in use.
+
+The stack terminates TLS in **Envoy** and renews the Let's Encrypt cert with a
+**certbot** sidecar:
+
+- `envoy` — TLS termination on :443, ACME challenge passthrough + HTTP→HTTPS redirect on :80.
+  Reads the cert from `/etc/letsencrypt/live/shivangchheda.dev/{fullchain,privkey}.pem`.
+- `acme-server` (nginx) — serves the `/.well-known/acme-challenge/` webroot.
+- `certbot` — loops `certbot renew` every 12h.
+
+### ⚠️ Critical: Envoy does not hot-reload certs
+
+Envoy reads its TLS cert from the static `filename:` in `envoy.yaml` **once at startup**
+and never re-reads the file. So renewing the cert on disk is **not enough** — Envoy keeps
+serving the old in-memory cert until it is restarted. If this step is missing, the cert
+silently expires every ~90 days and the site breaks in browsers (`NET::ERR_CERT_DATE_INVALID`)
+even though the app is healthy.
+
+**Fix in place:** the `certbot` service runs with `--deploy-hook "docker restart envoy"`.
+The deploy-hook fires **only when a cert is actually renewed**, restarting Envoy so it loads
+the fresh cert. This requires:
+
+- a custom certbot image (`Dockerfile.certbot` = `certbot/certbot` + `docker-cli`),
+- the host Docker socket mounted into the certbot container
+  (`/var/run/docker.sock` — root-equivalent host access; acceptable on this single-tenant box),
+- the envoy service pinned to `container_name: envoy`.
+
+### Manual operations
+
+```bash
+# Check cert expiry as Envoy sees it
+docker compose exec envoy openssl x509 -enddate -noout \
+  -in /etc/letsencrypt/live/shivangchheda.dev/fullchain.pem
+
+# Force a renewal now (then Envoy auto-restarts via the deploy-hook)
+docker compose run --rm certbot renew --webroot -w /var/www/certbot --force-renewal
+docker compose restart envoy   # only needed if you bypass the deploy-hook
+
+# Verify externally
+curl -sSI https://shivangchheda.dev | head -1   # expect HTTP/2 200
+echo | openssl s_client -servername shivangchheda.dev \
+  -connect shivangchheda.dev:443 2>/dev/null | openssl x509 -noout -dates
+
+# Confirm the deploy-hook fired on a real renewal
+docker compose logs certbot | grep -i "deploy-hook\|restart"
+```
+
+---
+
 ## Step 4: Setup Domain & SSL (Optional but Recommended)
+
+> Reference only — superseded by the Envoy + Certbot stack documented above.
 
 ### Option A: Nginx Reverse Proxy + Let's Encrypt
 
