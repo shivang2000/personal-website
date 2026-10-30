@@ -1,4 +1,5 @@
-import { caseStudies } from "@/lib/data/profile";
+import { roles } from "@/lib/data/profile";
+import { employerOf, isConfidential, orderedCases } from "@/variants/product/lib";
 import s from "@/variants/product/product.module.css";
 import { RevealController } from "@/variants/product/reveal";
 import {
@@ -6,15 +7,23 @@ import {
 	Experience,
 	Footer,
 	Hero,
-	HowIWork,
 	Nav,
 	OpenWork,
 	SectionHead,
 	Toolbox,
 } from "@/variants/product/sections";
 import { WorkBento } from "@/variants/product/work-bento";
+import { Workflow } from "@/variants/product/workflow";
 
 const ROOT_ID = "product-root";
+
+const publicEmployers = roles
+	.map((role) => role.company)
+	.filter((company) => orderedCases.some((study) => employerOf(study) === company));
+const hasConfidential = orderedCases.some(isConfidential);
+const workLede = `${orderedCases.length} case studies from ${publicEmployers.join(", ")}${
+	hasConfidential ? " and an AI-native travel platform I can't name" : ""
+}. Each tile shows the problem and the result; open it for the approach.`;
 
 export default function ProductLabPage() {
 	return (
@@ -31,12 +40,12 @@ export default function ProductLabPage() {
 							id="product-work-title"
 							eyebrow="Selected work"
 							title="Problems I owned, from first signal to production."
-							lede={`${caseStudies.length} case studies from an AI-native travel platform I can't name. Open any tile for the problem, the approach and the results.`}
+							lede={workLede}
 						/>
 						<WorkBento />
 					</div>
 				</section>
-				<HowIWork />
+				<Workflow />
 				<Experience />
 				<OpenWork />
 				<Toolbox />

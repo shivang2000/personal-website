@@ -1,11 +1,11 @@
 import type { CSSProperties, ReactNode } from "react";
-import { ArrowUp, ArrowUpRight, FileText, Github, Linkedin } from "lucide-react";
+import { ArrowRight, ArrowUp, ArrowUpRight, FileText, Github, Linkedin } from "lucide-react";
 
-import { howIWork, openWork, person, proof, roles, stack } from "@/lib/data/profile";
+import { openWork, person, proof, roles, stack } from "@/lib/data/profile";
 import { cn } from "@/lib/utils";
 
 import { CopyEmail } from "./copy-email";
-import { firstSentence, mailtoHref, splitPitch, withPeriod } from "./lib";
+import { CASE_HASH, caseForCompany, firstSentence, mailtoHref, roleAnchor, splitPitch, withPeriod } from "./lib";
 import s from "./product.module.css";
 import { StackPanel } from "./stack-panel";
 
@@ -62,6 +62,16 @@ function PrimaryCta({ children }: { children: ReactNode }) {
 	);
 }
 
+type ProofRef = { kind: string; id: string } | undefined;
+
+/** Case refs open the case dialog (via #case-<slug>); role refs scroll to that experience row. */
+function proofTarget(ref: ProofRef): { href: string; hint: string } | null {
+	if (!ref) return null;
+	if (ref.kind === "case") return { href: `${CASE_HASH}${ref.id}`, hint: "Read the case" };
+	if (ref.kind === "role") return { href: `#${roleAnchor(ref.id)}`, hint: `At ${ref.id}` };
+	return null;
+}
+
 export function Hero() {
 	const pitch = splitPitch(person.pitch);
 	return (
@@ -115,15 +125,34 @@ export function Hero() {
 				</div>
 
 				<ul className={s.proof} aria-label="Proof">
-					{proof.map((item) => (
-						<li key={item.label} className={s.proofItem}>
-							<div className={s.proofValue}>
-								{item.value}
-								{item.unit && <span className={s.proofUnit}>{item.unit}</span>}
-							</div>
-							<p className={s.proofLabel}>{item.label}</p>
-						</li>
-					))}
+					{proof.map((item) => {
+						const target = proofTarget(item.ref);
+						const body = (
+							<>
+								<div className={s.proofValue}>
+									{item.value}
+									{item.unit && <span className={s.proofUnit}>{item.unit}</span>}
+								</div>
+								<p className={s.proofLabel}>{item.label}</p>
+								{target && (
+									<span className={cn(s.proofHint, s.mono)}>
+										{target.hint} <ArrowRight size={12} strokeWidth={1.75} aria-hidden="true" />
+									</span>
+								)}
+							</>
+						);
+						return (
+							<li key={item.label} className={s.proofItem}>
+								{target ? (
+									<a href={target.href} className={s.proofLink}>
+										{body}
+									</a>
+								) : (
+									body
+								)}
+							</li>
+						);
+					})}
 				</ul>
 			</div>
 		</section>
@@ -154,32 +183,6 @@ export function SectionHead({
 	);
 }
 
-export function HowIWork() {
-	return (
-		<section id="about" className={s.section} aria-labelledby="product-about-title">
-			<div className={s.container}>
-				<SectionHead id="product-about-title" eyebrow="How I work" title="One owner, from the first commit to the pager." />
-				<div className={s.workGrid}>
-					<p className={s.intro} data-reveal="">
-						{person.intro}
-					</p>
-					<ol className={s.principles}>
-						{howIWork.map((item, i) => (
-							<li key={item.title} className={s.principle} data-reveal="" style={delay(i * 70)}>
-								<span>{String(i + 1).padStart(2, "0")}</span>
-								<div>
-									<h3>{item.title}</h3>
-									<p>{item.body}</p>
-								</div>
-							</li>
-						))}
-					</ol>
-				</div>
-			</div>
-		</section>
-	);
-}
-
 export function Experience() {
 	return (
 		<section id="experience" className={s.section} aria-labelledby="product-experience-title">
@@ -188,33 +191,47 @@ export function Experience() {
 					id="product-experience-title"
 					eyebrow="Experience"
 					title="Where I've shipped."
-					lede="Roles, newest first, with the outcome each one is remembered for."
+					lede="Public roles, newest first. Each one links to a case study in Selected work."
 				/>
 				<ol className={s.timeline}>
-					{roles.map((role) => (
-						<li key={role.company} className={s.entry} data-reveal="">
-							<div className={cn(s.entryWhen, s.mono)}>
-								<b>{role.period}</b>
-								{role.location}
-							</div>
-							<div>
-								<h3 className={s.entryCompany}>{role.company}</h3>
-								<p className={s.entryTitle}>{role.title}</p>
-								<p className={s.entrySummary}>{role.summary}</p>
-								<ul className={s.chips} aria-label="Stack">
-									{role.stack.map((tool) => (
-										<li key={tool} className={s.chip}>
-											{tool}
-										</li>
-									))}
-								</ul>
-							</div>
-							<p className={s.metric}>
-								<span className={s.statusDot} style={{ background: "var(--p-accent)" }} aria-hidden="true" />
-								{role.metric}
-							</p>
-						</li>
-					))}
+					{roles.map((role) => {
+						const study = caseForCompany(role.company);
+						const points = role.highlights.length > 0 ? role.highlights : [role.summary];
+						return (
+							<li key={role.company} id={roleAnchor(role.company)} className={s.entry} data-reveal="">
+								<div className={s.entryMeta}>
+									<p className={cn(s.entryWhen, s.mono)}>
+										{role.period} · {role.location}
+									</p>
+									<h3 className={s.entryCompany}>{role.company}</h3>
+									<p className={s.entryTitle}>{role.title}</p>
+									<p className={s.metric}>
+										<span className={s.statusDot} style={{ background: "var(--p-accent)" }} aria-hidden="true" />
+										{role.metric}
+									</p>
+									{study && (
+										<a href={`${CASE_HASH}${study.slug}`} className={cn(s.textLink, s.entryCase)}>
+											Case study: {study.title}
+										</a>
+									)}
+								</div>
+								<div>
+									<ul className={s.highlights}>
+										{points.map((point) => (
+											<li key={point}>{point}</li>
+										))}
+									</ul>
+									<ul className={s.chips} aria-label={`${role.company} stack`}>
+										{role.stack.map((tool) => (
+											<li key={tool} className={s.chip}>
+												{tool}
+											</li>
+										))}
+									</ul>
+								</div>
+							</li>
+						);
+					})}
 				</ol>
 			</div>
 		</section>

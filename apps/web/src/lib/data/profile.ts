@@ -170,6 +170,119 @@ export const caseStudies: CaseStudy[] = [
   },
 ];
 
+/**
+ * Case studies from public employers. Sourced from career-ops cv.md and
+ * article-digest.md (verified 2026-10-30) — no metric beyond what's there.
+ * `context` names the employer, unlike the confidential set above.
+ */
+export const roleCaseStudies: CaseStudy[] = [
+  {
+    slug: "trestle-portal",
+    title: "A developer portal that sells itself",
+    summary: "Redesigned the developer portal's evaluation flow and drove a 2–3× lift in self-serve revenue.",
+    context: "Trestle · Developer portal",
+    problem:
+      "Developers arrived to evaluate the API and left before paying. The self-serve funnel leaked at the evaluation step, and the wallet UI left people unsure of their balance.",
+    approach: [
+      "Rebuilt the portal homepage around the API evaluation flow so a visitor reaches a working call with less friction.",
+      "Rebuilt the wallet UI with simpler transaction flows and clear balance states.",
+      "Moved auth tokens out of localStorage into HTTP-only cookies in the Java backend, closing an XSS exposure — in a language outside my main stack.",
+    ],
+    results: [
+      { value: "2–3×", label: "self-serve revenue" },
+      { value: "HTTP-only", label: "cookies replace localStorage tokens" },
+      { value: "Day one", label: "owned complex features end to end" },
+    ],
+    stack: ["Next.js", "React", "TypeScript", "Java"],
+  },
+  {
+    slug: "zania-soc2",
+    title: "Compliance features that closed a deal",
+    summary: "Built SOC 2 Type II features inside an AI compliance agent that helped close a new enterprise client.",
+    context: "Zania · AI compliance platform",
+    problem:
+      "Enterprise buyers of an AI compliance agent expect SOC 2 Type II workflows built into the product, not bolted on.",
+    approach: [
+      "Implemented the SOC 2 Type II features in the agent's React front end.",
+      "Worked across US time zones with product and backend to ship them reliably.",
+      "Cut production bugs along the way to raise trust in the platform.",
+    ],
+    results: [
+      { value: "SOC 2 Type II", label: "features shipped in the AI agent" },
+      { value: "1", label: "new enterprise client closed" },
+    ],
+    stack: ["React", "TypeScript", "AI agents"],
+  },
+  {
+    slug: "factwise-bom",
+    title: "A Bill of Materials that scales",
+    summary: "Owned the BOM module end to end — recursive trees of hundreds of items — and helped win a $100K ARR client.",
+    context: "FactWise · Procurement SaaS",
+    problem:
+      "The Bill of Materials view slowed down as trees grew past a hundred nested items — exactly the scale an enterprise prospect worked at.",
+    approach: [
+      "Designed recursive BOM structures for deeply nested items.",
+      "Gave every node its own Redux selector so editing one item re-renders only that item, not the tree.",
+      "Mentored two to three engineers on the architecture so they could ship modules on their own.",
+    ],
+    results: [
+      { value: "$100K", label: "ARR enterprise client won" },
+      { value: "100s", label: "of nested items per tree" },
+      { value: "1 node", label: "re-renders per edit" },
+    ],
+    stack: ["React", "Redux", "TypeScript"],
+  },
+  {
+    slug: "wowrooms-search",
+    title: "Hotel search that held at peak",
+    summary: "Built the hotel search API in Go and kept it up through festival-season traffic spikes.",
+    context: "Wow Rooms · Hotel booking",
+    problem:
+      "Festival peak hours brought traffic spikes to hotel search, the core of the booking platform.",
+    approach: [
+      "Built the search API in Go as the platform's core search layer.",
+      "Led the vendor app's front end and built Node.js and Prisma services behind it.",
+      "Shipped an internal booking system end to end on AWS with Docker.",
+    ],
+    results: [
+      { value: "Go", label: "search API, core of the platform" },
+      { value: "Peak", label: "festival traffic held without degradation" },
+    ],
+    stack: ["Go", "Node.js", "Next.js", "Prisma", "AWS"],
+  },
+];
+
+/**
+ * How the way I build has changed. The user's own account (2026-10-30),
+ * anchored to sourced examples: the FactWise BOM module (hand-typed, weeks)
+ * and Stripe promo codes on 7 checkout flows (dossier: 2 days).
+ */
+export const workflow = {
+  title: "I keep rebuilding how I build",
+  intro:
+    "The tools change every few months. I change with them, because the goal isn't the editor — it's how much good work reaches production.",
+  stages: [
+    {
+      era: "Then",
+      setup: "VS Code, scripts, AI autocomplete",
+      body: "I typed the code. A module like the FactWise Bill of Materials took weeks of focused work.",
+      example: "BOM module · weeks",
+    },
+    {
+      era: "Next",
+      setup: "Claude Code agents in tmux",
+      body: "Several Claude Code sessions in tmux panes and windows, each on its own thread of work, while I review and steer.",
+      example: "Parallel work threads",
+    },
+    {
+      era: "Now",
+      setup: "T3 Code orchestration",
+      body: "Agents run in isolated worktrees with multi-model review, and I own the design, review, merge and release. Complex changes land in one to two days.",
+      example: "Promo codes on 7 checkout flows · 2 days",
+    },
+  ],
+} as const;
+
 export interface Role {
   company: string;
   title: string;
@@ -177,6 +290,8 @@ export interface Role {
   location: string;
   metric: string;
   summary: string;
+  /** Fuller account for the experience section. Sourced from career-ops cv.md. */
+  highlights: string[];
   stack: string[];
 }
 
@@ -190,6 +305,12 @@ export const roles: Role[] = [
     metric: "2–3× self-serve revenue",
     summary:
       "Redesigned the developer portal's evaluation flow and rebuilt the wallet UI. Moved auth tokens from localStorage to HTTP-only cookies in the Java backend.",
+    highlights: [
+      "Redesigned the developer portal homepage around the API evaluation flow, driving a 2–3× increase in self-serve revenue.",
+      "Rebuilt the wallet UI with simpler transaction flows and clear balance states, cutting user confusion and support load.",
+      "Owned complex features from day one — diagnosis, design and production — without hand-holding.",
+      "Moved auth tokens from localStorage to HTTP-only cookies in the Java backend, closing an XSS exposure; ramped on Java with AI tooling.",
+    ],
     stack: ["Next.js", "React", "TypeScript", "Java"],
   },
   {
@@ -199,6 +320,11 @@ export const roles: Role[] = [
     location: "Remote · San Francisco",
     metric: "Enterprise client closed",
     summary: "Built SOC 2 Type II features inside an AI compliance agent that helped close a new enterprise customer.",
+    highlights: [
+      "Implemented SOC 2 Type II compliance features inside an AI compliance agent, contributing directly to closing a new enterprise client.",
+      "Worked with US product and engineering teams across time zones on an AI-driven platform.",
+      "Reduced production bugs, raising the platform's reliability and user trust.",
+    ],
     stack: ["React", "TypeScript", "AI agents"],
   },
   {
@@ -209,6 +335,12 @@ export const roles: Role[] = [
     metric: "$100K ARR client won",
     summary:
       "Owned the Bill of Materials module: recursive trees of hundreds of items, with per-node Redux selectors so one edit never re-renders the tree. Mentored junior engineers.",
+    highlights: [
+      "Owned the Bill of Materials module end to end, helping secure a $100K ARR enterprise client.",
+      "Designed recursive BOM trees of hundreds of nested items, with per-node Redux selectors so one edit never re-renders the tree.",
+      "Built data-heavy dashboards for real-time bid analysis, pricing trends and purchase decisions inside a large legacy codebase, without performance regressions.",
+      "Mentored two to three junior engineers on architecture and code review until they shipped modules on their own.",
+    ],
     stack: ["React", "Redux", "TypeScript"],
   },
   {
@@ -218,6 +350,12 @@ export const roles: Role[] = [
     location: "Mumbai",
     metric: "Held festival peak traffic",
     summary: "Built the hotel search API in Go and the vendor booking app; shipped an internal booking system end to end on AWS.",
+    highlights: [
+      "Built a high-performance hotel search API in Go — the platform's core search layer — that held festival peak traffic without degradation.",
+      "Led the front end of the vendor mobile app (bookings, inventory, real-time availability) and built its Node.js / Express services on Prisma.",
+      "Built an internal booking management app end to end in Next.js, Express and Prisma, deployed on AWS with Docker.",
+      "Designed vendor-to-operations workflows that reduced booking conflicts and made fulfilment more reliable.",
+    ],
     stack: ["Go", "Node.js", "Next.js", "Prisma"],
   },
 ];

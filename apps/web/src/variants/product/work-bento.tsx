@@ -1,31 +1,142 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import gsap from "gsap";
-import { ArrowRight, ChevronLeft, ChevronRight, X } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, Lock, X } from "lucide-react";
 
-import { caseStudies, type CaseStudy } from "@/lib/data/profile";
+import { roles, type CaseStudy } from "@/lib/data/profile";
 import { cn } from "@/lib/utils";
 
-import { CaseVisual } from "./case-visuals";
+import { CaseChart, chartableResults } from "./case-visuals";
+import { CASE_HASH, employerOf, isChartable, isConfidential, leadResult, orderedCases } from "./lib";
 import s from "./product.module.css";
 
-/** lg spans for a 12-col bento; md is a 2-col grid where the first and last tile run full width. */
-const layout = [
-	"md:col-span-2 lg:col-span-7",
-	"lg:col-span-5",
-	"lg:col-span-4",
-	"lg:col-span-4",
-	"lg:col-span-4",
-	"md:col-span-2 lg:col-span-12",
-] as const;
-
-const HASH_PREFIX = "#case-";
 const EXIT_MS = 220;
+const ALL = "all";
 
-function pad(n: number) {
-	return String(n).padStart(2, "0");
+/* ─── Bento spans ────────────────────────────────────────────────
+   Rows cycle 7/5 · 4/4/4 · 5/7 · 4/4/4 on a 12-col grid, so any filtered count still tiles:
+   a lone leftover goes full width, a leftover pair splits 6/6. */
+const rowPattern = [[7, 5], [4, 4, 4], [5, 7], [4, 4, 4]] as const;
+const spanClass: Record<number, string> = {
+	4: "lg:col-span-4",
+	5: "lg:col-span-5",
+	6: "lg:col-span-6",
+	7: "lg:col-span-7",
+	12: "md:col-span-2 lg:col-span-12",
+};
+
+function spansFor(count: number): number[] {
+	const spans: number[] = [];
+	let row = 0;
+	while (spans.length < count) {
+		const remaining = count - spans.length;
+		const pattern = rowPattern[row % rowPattern.length] ?? [12];
+		if (remaining >= pattern.length) spans.push(...pattern);
+		else if (remaining === 1) spans.push(12);
+		else spans.push(6, 6);
+		row += 1;
+	}
+	return spans.slice(0, count);
 }
+
+/* ─── Filters ──────────────────────────────────────────────────── */
+
+interface Filter {
+	id: string;
+	label: string;
+	count: number;
+}
+
+function buildFilters(cases: CaseStudy[]): Filter[] {
+	const counts = new Map<string, number>();
+	for (const study of cases) counts.set(employerOf(study), (counts.get(employerOf(study)) ?? 0) + 1);
+	// Public employers in career order first; the confidential platform last.
+	const ordered = [
+		...roles.map((role) => role.company).filter((company) => counts.has(company)),
+		...[...counts.keys()].filter((employer) => !roles.some((role) => role.company === employer)),
+	];
+	const confidential = new Set(cases.filter(isConfidential).map(employerOf));
+	return [
+		{ id: ALL, label: "All", count: cases.length },
+		...ordered.map((employer) => ({
+			id: employer,
+			label: confidential.has(employer) ? `${employer} (confidential)` : employer,
+			count: counts.get(employer) ?? 0,
+		})),
+	];
+}
+
+/**
+ * Segmented control. The active state is a duplicate of the list, clipped to the active
+ * button and moved with clip-path — text colour and pill change in one motion instead of
+ * two cross-faded states.
+ */
+function Segments({ filters, value, onChange }: { filters: Filter[]; value: string; onChange: (id: string) => void }) {
+	const listRef = useRef<HTMLDivElement>(null);
+	const activeRef = useRef<HTMLDivElement>(null);
+	const [ready, setReady] = useState(false);
+
+	useLayoutEffect(() => {
+		const list = listRef.current;
+		const active = activeRef.current;
+		if (!list || !active) return;
+		const measure = () => {
+			const button = list.querySelector<HTMLElement>(`[data-filter="${CSS.escape(value)}"]`);
+			if (!button) return;
+			const left = button.offsetLeft;
+			const right = list.scrollWidth - (left + button.offsetWidth);
+			active.style.clipPath = `inset(0 ${right}px 0 ${left}px round 999px)`;
+		};
+		measure();
+		setReady(true);
+		const observer = new ResizeObserver(measure);
+		observer.observe(list);
+		return () => observer.disconnect();
+	}, [value]);
+
+	const renderButtons = (interactive: boolean) =>
+		filters.map((filter) =>
+			interactive ? (
+				<button
+					key={filter.id}
+					type="button"
+					className={s.segBtn}
+					data-filter={filter.id}
+					aria-pressed={filter.id === value}
+					onClick={() => onChange(filter.id)}
+				>
+					{filter.label}
+					<span className={s.segCount}>{filter.count}</span>
+				</button>
+			) : (
+				<span key={filter.id} className={s.segBtn}>
+					{filter.label}
+					<span className={s.segCount}>{filter.count}</span>
+				</span>
+			),
+		);
+
+	return (
+		<div className={s.segScroll}>
+			<div
+				className={s.segments}
+				role="group"
+				aria-label="Filter case studies by employer"
+				data-ready={ready ? "" : undefined}
+			>
+				<div ref={listRef} className={s.segList}>
+					{renderButtons(true)}
+				</div>
+				<div ref={activeRef} className={cn(s.segList, s.segActive)} aria-hidden="true">
+					{renderButtons(false)}
+				</div>
+			</div>
+		</div>
+	);
+}
+
+/* ─── Tile ─────────────────────────────────────────────────────── */
 
 function canTrackPointer() {
 	return (
@@ -34,28 +145,18 @@ function canTrackPointer() {
 	);
 }
 
-function Tile({
-	study,
-	index,
-	wide,
-	onOpen,
-}: {
-	study: CaseStudy;
-	index: number;
-	wide: boolean;
-	onOpen: (index: number, trigger: HTMLElement) => void;
-}) {
+function Tile({ study, wide, onOpen }: { study: CaseStudy; wide: boolean; onOpen: (slug: string, trigger: HTMLElement) => void }) {
 	const glowRef = useRef<HTMLDivElement>(null);
 	const moveRef = useRef<{ x: gsap.QuickToFunc; y: gsap.QuickToFunc } | null>(null);
 
 	useEffect(() => {
+		const glow = glowRef.current;
 		return () => {
-			if (glowRef.current) gsap.killTweensOf(glowRef.current);
+			if (glow) gsap.killTweensOf(glow);
 		};
 	}, []);
 
-	// Decorative pointer-follow light. Springy (quickTo with power3) so it trails the cursor
-	// instead of snapping, and retargets mid-flight when the pointer changes direction.
+	// Decorative pointer-follow light: quickTo trails the cursor and retargets mid-flight.
 	const onPointerEnter = (event: React.PointerEvent<HTMLElement>) => {
 		const glow = glowRef.current;
 		if (!glow || !canTrackPointer()) return;
@@ -78,36 +179,55 @@ function Tile({
 		move.y(event.clientY - rect.top - half);
 	};
 
+	const lead = leadResult(study);
+	const showLead = lead && !isChartable(lead.value);
+	const hasChart = chartableResults(study).length > 0;
+
 	return (
 		<article
-			className={cn(s.tile, wide && s.tileWide)}
+			className={cn(s.tile, wide && hasChart && s.tileWide)}
 			onPointerEnter={onPointerEnter}
 			onPointerMove={onPointerMove}
 		>
 			<div ref={glowRef} className={s.glow} aria-hidden="true" />
 			<div className={s.tileText}>
-				<div className={cn(s.tileTop, s.mono)}>
-					<span>Case {pad(index + 1)}</span>
-					<span>{study.stack.slice(0, 2).join(" · ")}</span>
+				<div className={s.tileTop}>
+					<span className={s.employer}>{employerOf(study)}</span>
+					{isConfidential(study) && (
+						<span className={cn(s.tag, s.mono)}>
+							<Lock size={11} strokeWidth={1.75} aria-hidden="true" />
+							confidential
+						</span>
+					)}
 				</div>
 				<h3 className={s.tileTitle}>
 					<button
 						type="button"
 						className={s.tileButton}
 						aria-haspopup="dialog"
-						data-case-index={index}
-						onClick={(event) => onOpen(index, event.currentTarget)}
+						data-case={study.slug}
+						onClick={(event) => onOpen(study.slug, event.currentTarget)}
 					>
 						{study.title}
 					</button>
 				</h3>
-				<p className={s.tileSummary}>{study.summary}</p>
+				<p className={s.tileProblem}>
+					<span className={cn(s.tileKicker, s.mono)}>Problem</span>
+					{study.problem}
+				</p>
+				{showLead && (
+					<p className={s.tileResult}>
+						<span className={s.tileResultValue}>{lead.value}</span> {lead.label}
+					</p>
+				)}
 			</div>
-			<div className={s.tileViz}>
-				<CaseVisual study={study} />
-			</div>
+			{hasChart && (
+				<div className={s.tileViz}>
+					<CaseChart study={study} />
+				</div>
+			)}
 			<div className={s.tileFoot}>
-				<span>{study.context}</span>
+				<span className={s.mono}>{study.stack.slice(0, 3).join(" · ")}</span>
 				<span className={s.tileOpen} aria-hidden="true">
 					Read case <ArrowRight size={14} strokeWidth={1.75} />
 				</span>
@@ -116,7 +236,10 @@ function Tile({
 	);
 }
 
+/* ─── Dialog content ──────────────────────────────────────────── */
+
 function CaseDetail({ study }: { study: CaseStudy }) {
+	const hasChart = chartableResults(study).length > 0;
 	return (
 		<>
 			<h2 id="product-case-title" className={s.dialogTitle}>
@@ -124,9 +247,11 @@ function CaseDetail({ study }: { study: CaseStudy }) {
 			</h2>
 			<p className={s.dialogLede}>{study.summary}</p>
 
-			<div className={s.dialogViz}>
-				<CaseVisual study={study} />
-			</div>
+			{hasChart && (
+				<div className={s.dialogViz}>
+					<CaseChart study={study} />
+				</div>
+			)}
 
 			<section className={s.dialogSection} aria-labelledby="product-case-problem">
 				<h3 id="product-case-problem">Problem</h3>
@@ -168,21 +293,39 @@ function CaseDetail({ study }: { study: CaseStudy }) {
 	);
 }
 
+/* ─── Bento + dialog ──────────────────────────────────────────── */
+
+function slugFromHash(): string | null {
+	const { hash } = window.location;
+	if (!hash.startsWith(CASE_HASH)) return null;
+	const slug = decodeURIComponent(hash.slice(CASE_HASH.length));
+	return orderedCases.some((study) => study.slug === slug) ? slug : null;
+}
+
 export function WorkBento() {
-	const [active, setActive] = useState<number | null>(null);
+	const filters = useMemo(() => buildFilters(orderedCases), []);
+	const [filter, setFilter] = useState(ALL);
+	const [filtered, setFiltered] = useState(false);
+	const [active, setActive] = useState<string | null>(null);
 	const dialogRef = useRef<HTMLDialogElement>(null);
 	const scrollRef = useRef<HTMLDivElement>(null);
 	const triggerRef = useRef<HTMLElement | null>(null);
 	const closeTimer = useRef<number | undefined>(undefined);
 
-	const open = useCallback((index: number, trigger?: HTMLElement) => {
+	const visible = useMemo(
+		() => (filter === ALL ? orderedCases : orderedCases.filter((study) => employerOf(study) === filter)),
+		[filter],
+	);
+	const spans = spansFor(visible.length);
+
+	const open = useCallback((slug: string, trigger?: HTMLElement | null) => {
 		window.clearTimeout(closeTimer.current);
 		dialogRef.current?.removeAttribute("data-closing");
 		if (trigger) triggerRef.current = trigger;
-		setActive(index);
+		setActive(slug);
 	}, []);
 
-	// Single cleanup path: runs for our animated close and for any native close (e.g. a forced Esc).
+	// Single cleanup path: our animated close and any native close (e.g. a forced Esc).
 	const onClosed = useCallback(() => {
 		window.clearTimeout(closeTimer.current);
 		dialogRef.current?.removeAttribute("data-closing");
@@ -200,53 +343,67 @@ export function WorkBento() {
 		closeTimer.current = window.setTimeout(() => dialog.close(), EXIT_MS);
 	}, []);
 
-	// Open / switch the dialog whenever the active case changes.
 	useEffect(() => {
 		const dialog = dialogRef.current;
 		if (active === null || !dialog) return;
-		const study = caseStudies[active];
 		if (!dialog.open) {
 			document.documentElement.style.overflow = "hidden";
 			dialog.showModal();
 		}
 		scrollRef.current?.scrollTo({ top: 0 });
-		if (study) history.replaceState(null, "", `${HASH_PREFIX}${study.slug}`);
+		history.replaceState(null, "", `${CASE_HASH}${active}`);
 	}, [active]);
 
-	// Deep link: /lab/product#case-<slug> opens that case on load.
+	// Deep links and in-page links (#case-<slug>, e.g. from the proof row and experience) open the dialog.
 	useEffect(() => {
-		const slug = window.location.hash.startsWith(HASH_PREFIX)
-			? window.location.hash.slice(HASH_PREFIX.length)
-			: null;
-		const index = slug ? caseStudies.findIndex((study) => study.slug === slug) : -1;
-		if (index >= 0) {
-			const tile = document.querySelector<HTMLElement>(`[data-case-index="${index}"]`);
-			open(index, tile ?? undefined);
-		}
+		const fromHash = () => {
+			const slug = slugFromHash();
+			if (!slug) return;
+			const focused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+			const tile = document.querySelector<HTMLElement>(`[data-case="${slug}"]`);
+			open(slug, focused && focused !== document.body ? focused : tile);
+		};
+		fromHash();
+		window.addEventListener("hashchange", fromHash);
 		return () => {
+			window.removeEventListener("hashchange", fromHash);
 			window.clearTimeout(closeTimer.current);
 			document.documentElement.style.removeProperty("overflow");
 		};
 	}, [open]);
 
-	const study = active === null ? null : caseStudies[active];
-	const total = caseStudies.length;
-	const prev = active === null ? 0 : (active - 1 + total) % total;
-	const next = active === null ? 0 : (active + 1) % total;
+	const study = active ? orderedCases.find((item) => item.slug === active) : undefined;
+	const sequence = study && visible.includes(study) ? visible : orderedCases;
+	const position = study ? sequence.indexOf(study) : -1;
+	const prev = sequence[(position - 1 + sequence.length) % sequence.length];
+	const next = sequence[(position + 1) % sequence.length];
 
 	return (
 		<>
-			<div className={s.bento}>
-				{caseStudies.map((item, index) => (
-					<div
-						key={item.slug}
-						data-reveal=""
-						className={cn("flex", layout[index % layout.length])}
-						style={{ "--reveal-delay": `${(index % 3) * 60}ms` } as CSSProperties}
-					>
-						<Tile study={item} index={index} wide={index === layout.length - 1} onOpen={open} />
-					</div>
-				))}
+			<Segments
+				filters={filters}
+				value={filter}
+				onChange={(id) => {
+					setFilter(id);
+					setFiltered(true);
+				}}
+			/>
+
+			<div className={s.bento} data-filtered={filtered ? "" : undefined}>
+				{visible.map((item, index) => {
+					const span = spans[index] ?? 12;
+					const oddLast = visible.length % 2 === 1 && index === visible.length - 1;
+					return (
+						<div
+							key={item.slug}
+							data-reveal=""
+							className={cn(s.cell, "flex", spanClass[span], oddLast && "md:col-span-2")}
+							style={{ "--reveal-delay": `${(index % 3) * 60}ms`, "--i": index } as CSSProperties}
+						>
+							<Tile study={item} wide={span === 12} onOpen={open} />
+						</div>
+					);
+				})}
 			</div>
 
 			<dialog
@@ -263,35 +420,33 @@ export function WorkBento() {
 					if (event.target === event.currentTarget) close();
 				}}
 			>
-				{study && active !== null && (
+				{study && (
 					<div className={s.dialogInner}>
 						<div className={cn(s.dialogBar, s.mono)}>
 							<span>
-								Case {pad(active + 1)} / {pad(total)} · {study.context}
+								{String(position + 1).padStart(2, "0")} / {String(sequence.length).padStart(2, "0")} · {study.context}
 							</span>
-							<button
-								type="button"
-								className={s.iconBtn}
-								onClick={() => open(prev)}
-								aria-label={`Previous case study: ${caseStudies[prev]?.title ?? ""}`}
-							>
-								<ChevronLeft size={16} strokeWidth={1.75} />
-							</button>
-							<button
-								type="button"
-								className={s.iconBtn}
-								onClick={() => open(next)}
-								aria-label={`Next case study: ${caseStudies[next]?.title ?? ""}`}
-							>
-								<ChevronRight size={16} strokeWidth={1.75} />
-							</button>
-							<button
-								type="button"
-								className={s.iconBtn}
-								onClick={close}
-								aria-label="Close case study"
-								autoFocus
-							>
+							{prev && (
+								<button
+									type="button"
+									className={s.iconBtn}
+									onClick={() => open(prev.slug)}
+									aria-label={`Previous case study: ${prev.title}`}
+								>
+									<ChevronLeft size={16} strokeWidth={1.75} />
+								</button>
+							)}
+							{next && (
+								<button
+									type="button"
+									className={s.iconBtn}
+									onClick={() => open(next.slug)}
+									aria-label={`Next case study: ${next.title}`}
+								>
+									<ChevronRight size={16} strokeWidth={1.75} />
+								</button>
+							)}
+							<button type="button" className={s.iconBtn} onClick={close} aria-label="Close case study" autoFocus>
 								<X size={16} strokeWidth={1.75} />
 							</button>
 						</div>
