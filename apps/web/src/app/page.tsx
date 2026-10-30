@@ -1,30 +1,14 @@
-import { Hero } from "@/components/portfolio/hero";
-import { Stats } from "@/components/portfolio/stats";
-import { OpenSource } from "@/components/portfolio/open-source";
-import { Skills } from "@/components/portfolio/skills";
-import { Projects } from "@/components/portfolio/projects";
-import { ContactCTA } from "@/components/portfolio/contact-cta";
-import { Footer } from "@/components/layout/footer";
+import { productFonts } from "@/variants/product/font";
+import { ProductPage } from "@/variants/product/product-page";
 
 /**
- * Portfolio Homepage
- *
- * Dark & Techy design featuring:
- * - Deep blue-black background with neon green accents
- * - Sora sans-serif + JetBrains Mono terminal typography
- * - GSAP scroll-triggered animations + Lenis smooth scroll
- * - Developer-focused, high-signal aesthetic
+ * Homepage — the "Product" variant, Shivang's pick after the design review.
+ * The other directions (Swiss, Editorial, Console) live under /lab.
  */
 export default function Home() {
-  return (
-    <>
-      <Hero />
-      <Stats />
-      <Projects />
-      <OpenSource />
-      <Skills />
-      <ContactCTA />
-      <Footer />
-    </>
-  );
+	return (
+		<div className={productFonts}>
+			<ProductPage />
+		</div>
+	);
 }

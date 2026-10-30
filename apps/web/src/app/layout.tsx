@@ -4,7 +4,7 @@ import { JetBrains_Mono, Sora } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 
 import "../index.css";
-import Header from "@/components/header";
+import { person } from "@/lib/data/profile";
 import Providers from "@/components/providers";
 
 const sora = Sora({
@@ -19,27 +19,29 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
+const title = `${person.name} — ${person.role}`;
+
 export const metadata: Metadata = {
-  title: "Shivang Chheda · Full-Stack Engineer · React · TypeScript · Node.js · Go",
-  description:
-    "Full-stack engineer shipping end-to-end at US startups from India. AI-tools-native (Claude Code, Codex). Recent OSS: Archestra MCP gateway (PR #3868).",
+  title,
+  description: person.pitch,
   keywords: [
+    "Product Engineer",
+    "Founding Engineer",
     "Full-Stack Engineer",
-    "AI-Native Developer",
-    "Forward Deployed Engineer",
+    "AI-native",
     "React",
+    "React Native",
     "TypeScript",
-    "Next.js",
-    "Node.js",
-    "Go",
-    "Claude Code",
-    "Remote Developer",
+    "Python",
+    "FastAPI",
+    "AWS",
+    "Terraform",
+    "Remote",
   ],
-  authors: [{ name: "Shivang Chheda" }],
+  authors: [{ name: person.name }],
   openGraph: {
-    title: "Shivang Chheda — Full-Stack Engineer, AI-tools-native",
-    description:
-      "Ships like a founding engineer. $100K ARR enterprise wins, 2–3× revenue lift, merged OSS into Archestra.",
+    title,
+    description: person.pitch,
     type: "website",
   },
 };
@@ -53,10 +55,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${sora.variable} ${jetbrainsMono.variable} antialiased`}>
         <Providers>
-          <div className="flex min-h-svh flex-col">
-            <Header />
-            <main className="flex-1">{children}</main>
-          </div>
+          {children}
         </Providers>
         <Analytics />
       </body>
