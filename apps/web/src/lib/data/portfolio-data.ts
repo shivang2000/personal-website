@@ -5,13 +5,11 @@
 export const personalInfo = {
   name: "Shivang Chheda",
   title: "Full-Stack Engineer",
-  tagline:
-    "Founding-style fullstack engineer. Strict TS, React, infra. AI-tools-native.",
+  tagline: "Founding-style fullstack engineer. Strict TS, React, infra. AI-tools-native.",
   headline: "I ship end-to-end across React, multi-agent backends, and AWS infra",
   subHeadline:
     "4+ years shipping at US startups from India — always remote, always async. Strict TypeScript everywhere (no `any`, no `ts-ignore`). Claude Code + Codex are my daily core workflow, not a gimmick. Currently contributing extensively to a freelance multi-agent travel platform alongside my day job.",
-  location:
-    "Based in India · IST / EU CET / US EST-PST overlap · Remote contractor, no visa",
+  location: "Based in India · IST / EU CET / US EST-PST overlap · Remote contractor, no visa",
   email: "shivangchheda@gmail.com",
   phone: "+91-9029722073",
   linkedin: "https://www.linkedin.com/in/shivang-chheda-83400415a/",
@@ -169,17 +167,44 @@ export const skillCategories: SkillCategory[] = [
   {
     title: "Core, shipping daily",
     description: "Primary stack on every role this year",
-    skills: ["React", "Next.js", "TypeScript (strict)", "TailwindCSS", "shadcn/ui", "motion", "Bun", "Node.js"],
+    skills: [
+      "React",
+      "Next.js",
+      "TypeScript (strict)",
+      "TailwindCSS",
+      "shadcn/ui",
+      "motion",
+      "Bun",
+      "Node.js",
+    ],
   },
   {
     title: "Backend depth",
     description: "Server-side systems I've owned end-to-end",
-    skills: ["FastAPI", "LangGraph", "Express.js", "Go", "Prisma", "PostgreSQL", "Redis", "REST", "gRPC"],
+    skills: [
+      "FastAPI",
+      "LangGraph",
+      "Express.js",
+      "Go",
+      "Prisma",
+      "PostgreSQL",
+      "Redis",
+      "REST",
+      "gRPC",
+    ],
   },
   {
     title: "Distributed systems & infra",
     description: "Infrastructure and multi-region design",
-    skills: ["Docker", "Nginx", "AWS (EC2, S3)", "Stripe webhooks", "Circuit breakers", "Async (httpx + asyncpg)", "Multi-region"],
+    skills: [
+      "Docker",
+      "Nginx",
+      "AWS (EC2, S3)",
+      "Stripe webhooks",
+      "Circuit breakers",
+      "Async (httpx + asyncpg)",
+      "Multi-region",
+    ],
   },
   {
     title: "AI workflow",
@@ -218,8 +243,7 @@ export const openSourceContributions: OpenSourceContribution[] = [
     project: "Archestra",
     repo: "archestra-ai/archestra",
     tagline: "MCP Gateway for AI Agents",
-    prTitle:
-      "fix(chat): add copy button to code blocks in conversation artifacts",
+    prTitle: "fix(chat): add copy button to code blocks in conversation artifacts",
     prNumber: 3868,
     issueNumber: 3243,
     mergedDate: "2026-04",

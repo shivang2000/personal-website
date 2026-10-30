@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { JetBrains_Mono, Sora } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 
 import "../index.css";
 import Header from "@/components/header";
@@ -19,8 +20,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title:
-    "Shivang Chheda · Full-Stack Engineer · React · TypeScript · Node.js · Go",
+  title: "Shivang Chheda · Full-Stack Engineer · React · TypeScript · Node.js · Go",
   description:
     "Full-stack engineer shipping end-to-end at US startups from India. AI-tools-native (Claude Code, Codex). Recent OSS: Archestra MCP gateway (PR #3868).",
   keywords: [
@@ -58,6 +58,7 @@ export default function RootLayout({
             <main className="flex-1">{children}</main>
           </div>
         </Providers>
+        <Analytics />
       </body>
     </html>
   );

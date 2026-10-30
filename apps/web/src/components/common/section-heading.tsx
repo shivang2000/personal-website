@@ -35,17 +35,12 @@ export function SectionHeading({
       )}
     >
       <div className={cn("inline-block", align === "center" && "w-full")}>
-        <h2
-          className="text-section-title font-sans font-bold tracking-tight text-foreground"
-        >
+        <h2 className="text-section-title font-sans font-bold tracking-tight text-foreground">
           {title}
         </h2>
         {/* Decorative wavy underline */}
         <svg
-          className={cn(
-            "mt-2 h-2 w-32",
-            align === "center" && "mx-auto",
-          )}
+          className={cn("mt-2 h-2 w-32", align === "center" && "mx-auto")}
           viewBox="0 0 120 8"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
