@@ -93,6 +93,7 @@ const caseOrder = [
 	"zania-soc2",
 	"signup-forensics",
 	"wowrooms-search",
+	"memory-dom",
 	"data-security",
 	"ci-rescue",
 ];

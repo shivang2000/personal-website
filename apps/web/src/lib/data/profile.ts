@@ -131,6 +131,25 @@ export const caseStudies: CaseStudy[] = [
     stack: ["React 19", "Vite", "Postgres indexes", "Chrome DevTools"],
   },
   {
+    slug: "memory-dom",
+    title: "Out of memory, on the phone and the server",
+    summary: "Stopped the Android app and the bookings API running out of memory for heavy users by rendering and returning only what's needed.",
+    context: "AI travel platform · confidential",
+    problem:
+      "Heavy users crashed the Android app on the Bookings tab, and the same account's bookings request pushed the API server to 625 MB. One response weighed about 443 MB because a profile photo was copied into every booking.",
+    approach: [
+      "Switched the bookings list to a windowed FlatList so only rows near the screen exist as native views.",
+      "Bounded the bookings endpoint with server-side buckets and limits, and stopped embedding inline images in booking payloads.",
+      "Cut what the UI mounts elsewhere too: the hotel page renders five room types with Show more, and the photo carousel animates at most two slides.",
+    ],
+    results: [
+      { value: "6,390 → 2,095", label: "native views on the Bookings tab" },
+      { value: "121 → 68 MB", label: "peak Java heap, no longer climbing" },
+      { value: "54 → 35 MB", label: "peak memory serving a 1,365-booking account" },
+    ],
+    stack: ["React Native", "FlatList", "FastAPI", "Python tracemalloc", "React"],
+  },
+  {
     slug: "data-security",
     title: "Customer data, locked at the database",
     summary: "Enforced Postgres row-level security on 20 customer tables and closed an edge-cache leak serving private PDFs.",

@@ -14,7 +14,7 @@ export function Work() {
           Selected work
         </h2>
         <p className={s.sectionNote}>
-          Six production problems from one AI-native travel platform, written the way I’d write the postmortem: what
+          Production problems from one AI-native travel platform, written the way I’d write the postmortem: what
           broke, what I did, what changed. The client is confidential, so names and links are gone; every number traces
           to a merged PR or a dated incident note.
         </p>
