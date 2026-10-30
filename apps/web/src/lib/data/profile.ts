@@ -274,7 +274,7 @@ export const roleCaseStudies: CaseStudy[] = [
     slug: "wowrooms-search",
     title: "Hotel search that held at peak",
     summary: "Built the hotel search API in Go and kept it up through festival-season traffic spikes.",
-    context: "Wow Rooms · Hotel booking",
+    context: "Wow Rooms (Hourly Rooms) · Hotel booking",
     problem:
       "Festival peak hours brought traffic spikes to hotel search, the core of the booking platform.",
     approach: [
@@ -365,7 +365,7 @@ export interface Role {
 export const roles: Role[] = [
   {
     company: "Trestle",
-    title: "Full-Stack Engineer, Developer Portal",
+    title: "Software Engineer, Frontend",
     period: "2025 — now",
     location: "Remote · US",
     metric: "2–3× self-serve revenue",
@@ -382,7 +382,7 @@ export const roles: Role[] = [
   },
   {
     company: "Zania",
-    title: "Software Engineer, Frontend",
+    title: "Software Engineer",
     period: "2024 — 2025",
     location: "Remote · San Francisco",
     metric: "Enterprise client closed",
@@ -398,7 +398,7 @@ export const roles: Role[] = [
     company: "FactWise",
     title: "Frontend Engineer",
     period: "2023 — 2024",
-    location: "Remote · India",
+    location: "Mumbai · On-site",
     metric: "$100K ARR client won",
     summary:
       "Owned the Bill of Materials module: recursive trees of hundreds of items, with per-node Redux selectors so one edit never re-renders the tree. Mentored junior engineers.",
@@ -411,8 +411,8 @@ export const roles: Role[] = [
     stack: ["React", "Redux", "TypeScript"],
   },
   {
-    company: "Wow Rooms",
-    title: "Software Engineer I",
+    company: "Wow Rooms (Hourly Rooms)",
+    title: "Software Development Engineer",
     period: "2022 — 2023",
     location: "Mumbai",
     metric: "Held festival peak traffic",
