@@ -321,6 +321,32 @@ export const workflow = {
   ],
 } as const;
 
+/**
+ * Standout "AI Wrapped" (standout.work), scored 2026-10-30 from Claude Code /
+ * Codex history. Source: the card image in public/standout-wrapped.png.
+ * Retail token cost is intentionally omitted.
+ */
+export const standout = {
+  score: "97",
+  outOf: "100",
+  rank: "Top 3% of 5,456 developers",
+  tier: "Unicorn",
+  style: "AI-Native Engineer",
+  bars: [
+    { label: "Intensity", value: 92 },
+    { label: "Consistency", value: 96 },
+  ],
+  stats: [
+    { value: "2.6", label: "parallel agents on average" },
+    { value: "4,364", label: "agent sessions" },
+    { value: "11B", label: "tokens in the last 30 days" },
+    { value: "02:00", label: "peak hour in India — mid-afternoon in the US" },
+  ],
+  card: "/standout-wrapped.png",
+  href: "https://standout.work",
+  command: "npx standout",
+} as const;
+
 export interface Role {
   company: string;
   title: string;

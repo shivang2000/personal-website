@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
+import Image from "next/image";
 
-import { howIWork, workflow } from "@/lib/data/profile";
+import { howIWork, standout, workflow } from "@/lib/data/profile";
 import { cn } from "@/lib/utils";
 
 import s from "./product.module.css";
@@ -96,6 +97,69 @@ function NowScheme() {
 
 const schemes = [ThenScheme, NextScheme, NowScheme];
 
+/**
+ * The "Now" stage, measured by a third party. Sits right under the track so the claim and
+ * the evidence read together; the card image links to the full-size original.
+ */
+function Measured() {
+	return (
+		<aside className={s.measured} data-reveal="" aria-labelledby="product-measured-title">
+			<div className={s.measuredScore}>
+				<p className={s.measuredEyebrow} id="product-measured-title">
+					Measured by Standout
+				</p>
+				<p className={s.measuredFigure}>
+					{standout.score}
+					<span>/{standout.outOf}</span>
+				</p>
+				<p className={s.measuredRank}>
+					{standout.rank} · <strong>{standout.tier}</strong>
+				</p>
+				<ul className={s.measuredBars}>
+					{standout.bars.map((bar) => (
+						<li key={bar.label}>
+							<span>{bar.label}</span>
+							<span className={s.measuredTrack} aria-hidden="true">
+								<span style={{ "--bar": `${bar.value}%` } as CSSProperties} />
+							</span>
+							<span className={s.measuredValue}>{bar.value}</span>
+						</li>
+					))}
+				</ul>
+			</div>
+
+			<dl className={s.measuredStats}>
+				{standout.stats.map((stat) => (
+					<div key={stat.label}>
+						<dt>{stat.label}</dt>
+						<dd>{stat.value}</dd>
+					</div>
+				))}
+			</dl>
+
+			<a className={s.measuredCard} href={standout.card} target="_blank" rel="noreferrer">
+				<Image
+					src={standout.card}
+					alt={`Standout AI Wrapped card: ${standout.score}/${standout.outOf}, ${standout.rank.toLowerCase()}, style ${standout.style}`}
+					width={1195}
+					height={1484}
+					sizes="(min-width: 1024px) 180px, 40vw"
+				/>
+				<span>
+					Full card <span aria-hidden="true">↗</span>
+				</span>
+			</a>
+
+			<p className={s.measuredNote}>
+				Scored from my Claude Code and Codex history.{" "}
+				<a href={standout.href} target="_blank" rel="noreferrer">
+					Run yours: <code>{standout.command}</code>
+				</a>
+			</p>
+		</aside>
+	);
+}
+
 export function Workflow() {
 	const last = workflow.stages.length - 1;
 	return (
@@ -119,6 +183,8 @@ export function Workflow() {
 						);
 					})}
 				</ol>
+
+				<Measured />
 
 				<ul className={s.principles}>
 					{howIWork.map((item, i) => (
