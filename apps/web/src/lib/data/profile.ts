@@ -215,6 +215,25 @@ export const roleCaseStudies: CaseStudy[] = [
     stack: ["Next.js", "React", "TypeScript", "Java"],
   },
   {
+    slug: "trestle-memory",
+    title: "Making a heavy admin portal light",
+    summary: "Led a 13-month memory effort on the developer portal: DOM nodes down 46–56% on every audited page, and one leak cut by 97%.",
+    context: "Trestle · Developer portal",
+    problem:
+      "The portal's admin pages got heavier the longer people used them. Paging through users left closed drawers alive in memory, and the usage table mounted all 450 rows at once.",
+    approach: [
+      "Built a heap-snapshot harness and traced the retained memory to closed MUI drawers that stayed mounted; drawers now unmount after their exit transition.",
+      "Windowed the usage table in about 60 lines instead of adding a library, so only the rows on screen exist.",
+      "Added timer-cleanup hooks, Chart.js teardown and memoized rows, then CI budgets for bundle size, memory and Lighthouse so it can't creep back. Measured with forced-GC snapshots in the lab.",
+    ],
+    results: [
+      { value: "+13.3 → +0.4 MB", label: "memory kept per cycle on the admin Users page" },
+      { value: "13,200 → 1,220", label: "DOM nodes on the same page" },
+      { value: "450 → 19", label: "table rows mounted at once" },
+    ],
+    stack: ["React", "MUI", "Redux", "Chart.js", "Chrome DevTools", "Jenkins"],
+  },
+  {
     slug: "zania-soc2",
     title: "Compliance features that closed a deal",
     summary: "Built SOC 2 Type II features inside an AI compliance agent that helped close a new enterprise client.",
@@ -327,10 +346,11 @@ export const roles: Role[] = [
     highlights: [
       "Redesigned the developer portal homepage around the API evaluation flow, driving a 2–3× increase in self-serve revenue.",
       "Rebuilt the wallet UI with simpler transaction flows and clear balance states, cutting user confusion and support load.",
+      "Led a 13-month, ~90-ticket memory effort on the portal: DOM nodes down 46–56% on every audited page, an admin-page leak cut 97% (+13.3 → +0.4 MB per cycle), and a windowed usage table (450 → 19 mounted rows, heap −53%).",
       "Owned complex features from day one — diagnosis, design and production — without hand-holding.",
       "Moved auth tokens from localStorage to HTTP-only cookies in the Java backend, closing an XSS exposure; ramped on Java with AI tooling.",
     ],
-    stack: ["Next.js", "React", "TypeScript", "Java"],
+    stack: ["Next.js", "React", "TypeScript", "MUI", "Java"],
   },
   {
     company: "Zania",

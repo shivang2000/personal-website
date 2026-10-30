@@ -89,6 +89,7 @@ const caseOrder = [
 	"trestle-portal",
 	"refund-guarantee",
 	"factwise-bom",
+	"trestle-memory",
 	"performance",
 	"zania-soc2",
 	"signup-forensics",
