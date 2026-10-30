@@ -1,14 +1,14 @@
-import { archivo } from "@/variants/swiss/font";
-import { SwissPage } from "@/variants/swiss/swiss-page";
+import { productFonts } from "@/variants/product/font";
+import { ProductPage } from "@/variants/product/product-page";
 
 /**
- * Homepage — the "Swiss" variant, chosen by the design council (Oct 2026).
- * Other directions live under /lab for comparison.
+ * Homepage — the "Product" variant, Shivang's pick after the design review.
+ * The other directions (Swiss, Editorial, Console) live under /lab.
  */
 export default function Home() {
-  return (
-    <div className={archivo.variable}>
-      <SwissPage />
-    </div>
-  );
+	return (
+		<div className={productFonts}>
+			<ProductPage />
+		</div>
+	);
 }
