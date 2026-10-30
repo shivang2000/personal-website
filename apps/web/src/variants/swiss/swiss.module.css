@@ -14,6 +14,10 @@
   --red: #d7261e; /* signal: oklch(57.5% 0.205 29) */
   --red-ink: #b81d16; /* red as small text, 5.9:1 on paper */
   --on-red: #ffffff; /* 5.0:1 on --red */
+  --canvas: #f2f0eb; /* html background while mounted */
+  --footer-bg: var(--ink);
+  --footer-fg: var(--paper);
+  --footer-muted: #b9b6ae; /* 9.5:1 on --footer-bg */
 
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --margin: clamp(1.25rem, 3.9vw, 3.5rem);
@@ -47,10 +51,32 @@
   }
 }
 
+/* Dark: same grid, same single red. Ink and paper swap; the red field
+   keeps #d7261e so white-on-red stays 5.0:1, and the big red numerals
+   clear 3.9:1 on the dark paper. Small red text gets a lighter ink. */
+:global(.dark) .root {
+  --paper: #121211;
+  --ink: #edebe5; /* 15.7:1 */
+  --ink-2: #b3b0a8; /* 8.7:1 */
+  --ink-3: #9b978f; /* 6.4:1 */
+  --hair: #3a3834;
+  --red-ink: #ff6b5e; /* 6.7:1 */
+  --footer-bg: #1c1b19;
+  --footer-fg: var(--ink);
+  --footer-muted: var(--ink-3);
+
+  color-scheme: dark;
+}
+
 /* The page owns the canvas and scrollbar while it is mounted. */
 :global(html):has(.root) {
   background: #f2f0eb;
   scrollbar-color: #0e0e0e #f2f0eb;
+}
+
+:global(html.dark):has(.root) {
+  background: #121211;
+  scrollbar-color: #edebe5 #121211;
 }
 
 .root ::selection {
@@ -178,6 +204,20 @@
 
 .headerResume {
   text-decoration-line: underline;
+}
+
+.headerTheme {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.headerTheme:hover {
+  color: var(--red-ink);
 }
 
 .headerActions {
@@ -1031,7 +1071,7 @@
 }
 
 .contact ::selection {
-  background: var(--ink);
+  background: #0e0e0e;
   color: var(--on-red);
 }
 
@@ -1130,13 +1170,13 @@
 
 .footer {
   padding-block: 1.5rem;
-  background: var(--ink);
-  color: var(--paper);
+  background: var(--footer-bg);
+  color: var(--footer-fg);
   font-size: 0.875rem;
 }
 
 .footer :focus-visible {
-  outline-color: var(--paper);
+  outline-color: var(--footer-fg);
 }
 
 .footerName,
@@ -1147,7 +1187,7 @@
 }
 
 .footerColophon {
-  color: #b9b6ae;
+  color: var(--footer-muted);
 }
 
 .footerTop {
@@ -1186,6 +1226,7 @@
 .wordmark,
 .nav a,
 .headerResume,
+.headerTheme,
 .footerTop {
   display: inline-flex;
   align-items: center;

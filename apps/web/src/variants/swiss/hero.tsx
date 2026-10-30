@@ -6,6 +6,7 @@ import { caseStudies, person, proof } from "@/lib/data/profile";
 
 import { ArrowLink, Figure, mailto, pad, roleId, Rule } from "./primitives";
 import s from "./swiss.module.css";
+import { ThemeToggle } from "./theme-toggle";
 
 const NAV = [
   { href: "#work", label: "Work" },
@@ -55,6 +56,7 @@ export function Header() {
           </ul>
         </nav>
         <div className={s.headerActions}>
+          <ThemeToggle className={s.headerTheme} />
           <a href={person.links.resume} className={s.headerResume}>
             Resume
           </a>
