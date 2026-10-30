@@ -1,30 +1,14 @@
-import { Hero } from "@/components/portfolio/hero";
-import { Stats } from "@/components/portfolio/stats";
-import { OpenSource } from "@/components/portfolio/open-source";
-import { Skills } from "@/components/portfolio/skills";
-import { Projects } from "@/components/portfolio/projects";
-import { ContactCTA } from "@/components/portfolio/contact-cta";
-import { Footer } from "@/components/layout/footer";
+import { archivo } from "@/variants/swiss/font";
+import { SwissPage } from "@/variants/swiss/swiss-page";
 
 /**
- * Portfolio Homepage
- *
- * Dark & Techy design featuring:
- * - Deep blue-black background with neon green accents
- * - Sora sans-serif + JetBrains Mono terminal typography
- * - GSAP scroll-triggered animations + Lenis smooth scroll
- * - Developer-focused, high-signal aesthetic
+ * Homepage — the "Swiss" variant, chosen by the design council (Oct 2026).
+ * Other directions live under /lab for comparison.
  */
 export default function Home() {
   return (
-    <>
-      <Hero />
-      <Stats />
-      <Projects />
-      <OpenSource />
-      <Skills />
-      <ContactCTA />
-      <Footer />
-    </>
+    <div className={archivo.variable}>
+      <SwissPage />
+    </div>
   );
 }

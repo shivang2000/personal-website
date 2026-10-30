@@ -1,0 +1,100 @@
+/* Editorial variant tokens. Scoped to the variant's wrapper ([data-theme="editorial"]);
+ * the one :root token is the canvas colour, uniquely named, so the document behind the
+ * page (overscroll, html and body) matches the paper only while this page is mounted. */
+:root {
+	--color-editorial-canvas: oklch(96.6% 0.011 84);
+	--color-editorial-scroll: oklch(64% 0.012 75);
+}
+
+[data-theme="editorial"] {
+	--color-paper: oklch(96.6% 0.011 84);
+	--color-paper-2: oklch(93.6% 0.014 82);
+	--color-paper-3: oklch(90.5% 0.016 80);
+	--color-ink: oklch(21% 0.012 65);
+	--color-ink-2: oklch(33% 0.012 65);
+	--color-muted: oklch(47% 0.013 70);
+	--color-rule: oklch(85% 0.013 80);
+	--color-rule-2: oklch(64% 0.012 75);
+	--color-accent: oklch(50% 0.185 14);
+	--color-accent-ink: oklch(97% 0.01 84);
+	--color-focus: oklch(52% 0.2 14);
+	--color-on-ink: oklch(95% 0.011 84);
+	--color-on-ink-muted: oklch(79% 0.012 80);
+	--color-on-ink-rule: oklch(42% 0.012 70);
+	--color-focus-on-ink: oklch(76% 0.15 14);
+
+	--font-display: var(--ed-serif), "Newsreader", ui-serif, Georgia, serif;
+	--font-body: var(--ed-serif), "Newsreader", ui-serif, Georgia, serif;
+	--font-label: var(--ed-sans), "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+
+	--space-3xs: 2px;
+	--space-2xs: 4px;
+	--space-xs: 8px;
+	--space-sm: 12px;
+	--space-md: 16px;
+	--space-lg: 24px;
+	--space-xl: 40px;
+	--space-2xl: 64px;
+	--space-3xl: 96px;
+	--space-4xl: 144px;
+
+	--text-xs: 0.875rem;
+	--text-sm: 0.9375rem;
+	--text-md: 1rem;
+	--text-body: 1.125rem;
+	--text-lead: clamp(1.25rem, 1.05rem + 0.6vw, 1.625rem);
+	--text-title: clamp(1.375rem, 1.1rem + 0.8vw, 1.875rem);
+	--text-figure: clamp(2.25rem, 1.5rem + 2vw, 3.5rem);
+	--text-section: clamp(2.125rem, 1.25rem + 2.4vw, 3.5rem);
+	--text-feature: clamp(2.5rem, 1.25rem + 3.6vw, 4.5rem);
+	--text-display: clamp(2.5rem, 1.25rem + 4.2vw, 5.25rem);
+	--text-figure-lead: clamp(7rem, 2rem + 14vw, 14rem);
+
+	--ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+	--dur-micro: 120ms;
+	--dur-short: 220ms;
+	--dur-reveal: 720ms;
+
+	--container: 1440px;
+	--gutter: 64px;
+	--gap-columns: 32px;
+	--section-gap-s: 120px;
+	--section-gap: 144px;
+	--section-gap-l: 176px;
+	--rule-hair: 1px;
+	--rule-heavy: 3px;
+	--radius: 0;
+	--z-toast: 500;
+}
+
+@media (max-width: 60rem) {
+	[data-theme="editorial"] {
+		--gutter: 24px;
+		--section-gap-s: 80px;
+		--section-gap: 96px;
+		--section-gap-l: 120px;
+	}
+}
+
+@media (max-width: 40rem) {
+	[data-theme="editorial"] {
+		--gutter: 16px;
+		--gap-columns: 16px;
+		--section-gap-s: 56px;
+		--section-gap: 72px;
+		--section-gap-l: 96px;
+	}
+}
+
+html:has([data-theme="editorial"]) {
+	overflow-x: clip;
+	color-scheme: light !important;
+	background: var(--color-editorial-canvas);
+	scrollbar-color: var(--color-editorial-scroll) var(--color-editorial-canvas);
+	scroll-padding-top: 1.5rem;
+}
+
+body:has([data-theme="editorial"]) {
+	overflow-x: clip;
+	background: var(--color-editorial-canvas);
+}
