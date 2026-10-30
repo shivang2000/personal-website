@@ -139,11 +139,10 @@ function Measured() {
 
 			<a className={s.measuredCard} href={standout.card} target="_blank" rel="noreferrer">
 				<Image
-					src={standout.card}
+					src={standout.thumb}
 					alt={`Standout AI Wrapped card: ${standout.score}/${standout.outOf}, ${standout.rank.toLowerCase()}, style ${standout.style}`}
-					width={1195}
-					height={1484}
-					sizes="(min-width: 1024px) 180px, 40vw"
+					width={386}
+					height={480}
 				/>
 				<span>
 					Full card <span aria-hidden="true">↗</span>
