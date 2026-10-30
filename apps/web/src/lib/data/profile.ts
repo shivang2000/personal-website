@@ -343,6 +343,8 @@ export const standout = {
     { value: "02:00", label: "peak hour in India — mid-afternoon in the US" },
   ],
   card: "/standout-wrapped.png",
+  /** 386×480 thumbnail for the 180px slot; `card` is the full-size original. */
+  thumb: "/standout-wrapped-thumb.jpg",
   href: "https://standout.work",
   command: "npx standout",
 } as const;
